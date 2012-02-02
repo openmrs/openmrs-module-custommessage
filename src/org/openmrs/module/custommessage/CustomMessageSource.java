@@ -26,6 +26,8 @@ import java.util.TreeMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.GlobalProperty;
+import org.openmrs.api.GlobalPropertyListener;
 import org.openmrs.api.context.Context;
 import org.openmrs.messagesource.MessageSourceService;
 import org.openmrs.messagesource.MutableMessageSource;
@@ -41,11 +43,13 @@ import org.springframework.context.support.AbstractMessageSource;
 /**
  * Registers the custom message source service
  */
-public class CustomMessageSource extends AbstractMessageSource implements MutableMessageSource, ApplicationContextAware {
+public class CustomMessageSource extends AbstractMessageSource implements MutableMessageSource, ApplicationContextAware, GlobalPropertyListener {
 	
 	protected static final Log log = LogFactory.getLog(CustomMessageSource.class);
 	private Map<Locale, PresentationMessageMap> cache = null;
 	private boolean showMessageCode = false;
+	
+	public static final String GLOBAL_PROPERTY_SHOW_MESSAGE_CODES = "custommessage.showMessageCodes";
 	
 	/**
 	 * @see ApplicationContextAware#setApplicationContext(ApplicationContext)
@@ -118,7 +122,14 @@ public class CustomMessageSource extends AbstractMessageSource implements Mutabl
 		for (PresentationMessage pm : getMutableParentSource().getPresentations()) {
 			addPresentationMessageToCache(pm, false);
 		}
-		showMessageCode = "true".equals(Context.getAdministrationService().getGlobalProperty("custommessage.showMessageCodes", "false"));
+		updateShowMessageCode();
+	}
+	
+	/**
+	 * Updates the showMessageCode variable based on the global property configuration
+	 */
+	public void updateShowMessageCode() {
+		showMessageCode = "true".equals(Context.getAdministrationService().getGlobalProperty(GLOBAL_PROPERTY_SHOW_MESSAGE_CODES, "false"));
 	}
 
 	/**
@@ -227,6 +238,32 @@ public class CustomMessageSource extends AbstractMessageSource implements Mutabl
 		}
 		return null;
 	}
+	
+	/**
+	 * @see GlobalPropertyListener#supportsPropertyName(String)
+	 */
+    public boolean supportsPropertyName(String property) {   	
+	    return property != null && property.equals(CustomMessageSource.GLOBAL_PROPERTY_SHOW_MESSAGE_CODES);
+    }
+	
+	/**
+	 * @see GlobalPropertyListener#globalPropertyChanged(GlobalProperty)
+	 */
+	public void globalPropertyChanged(GlobalProperty property) {
+		if (property.getProperty() != null) {
+			if (property.getProperty().equals(CustomMessageSource.GLOBAL_PROPERTY_SHOW_MESSAGE_CODES)) {
+				updateShowMessageCode();
+			}
+		}
+	    
+    }
+
+	/**
+	 * @see GlobalPropertyListener#globalPropertyDeleted(String)
+	 */
+    public void globalPropertyDeleted(String property) {
+    	// Do nothing
+    }
 	
 	/**
 	 * Convenience method to get the parent message source as a MutableMessageSource
