@@ -120,7 +120,9 @@ public class CustomMessageSource extends AbstractMessageSource implements Mutabl
 	public synchronized void refreshCache() {
 		cache = getCustomMessageService().getPresentationMessagesByLocale();
 		for (PresentationMessage pm : getMutableParentSource().getPresentations()) {
-			addPresentationMessageToCache(pm, false);
+			if (!pm.getCode().contains("<!--")) {
+				addPresentationMessageToCache(pm, false);
+			}
 		}
 		updateShowMessageCode();
 	}
