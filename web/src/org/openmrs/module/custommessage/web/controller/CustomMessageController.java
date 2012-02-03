@@ -1,6 +1,8 @@
 package org.openmrs.module.custommessage.web.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
@@ -26,10 +28,33 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class CustomMessageController {
     
     @RequestMapping("/module/custommessage/index.form") 
-    public void viewIndex(ModelMap model) {
+    public void viewIndex(ModelMap model, 
+    					  @RequestParam(value="missingInLocale", required=false) Locale missingInLocale,
+    					  @RequestParam(value="matchingText", required=false) String matchingText) throws Exception {
+    	
     	MutableMessageSource mms = Context.getMessageSourceService().getActiveMessageSource();
     	CustomMessageSource cms = (CustomMessageSource)mms;
-    	model.addAttribute("codes", cms.getAllMessageCodes());
+    	cms.refreshCache();
+    	
+    	List<String> codes = new ArrayList<String>();
+    	Map<String, Map<Locale, PresentationMessage>> messagesByLocale = cms.getAllMessagesByCode();
+    	if (missingInLocale == null && StringUtils.isBlank(matchingText)) {
+    		codes.addAll(messagesByLocale.keySet());
+    	}
+    	else {
+    		for (String code : messagesByLocale.keySet()) {
+    			Map<Locale, PresentationMessage> forCode = messagesByLocale.get(code);
+    			boolean codeMatches = StringUtils.isBlank(matchingText) || code.contains(matchingText);
+    			boolean localeMatches = missingInLocale == null || forCode.get(missingInLocale) == null;
+    			if (codeMatches && localeMatches) {
+    				codes.add(code);
+    			}
+    		}
+    	}
+    	model.addAttribute("codes", codes);
+    	model.addAttribute("missingInLocale", missingInLocale);
+    	model.addAttribute("matchingText", matchingText);
+    	
     	Map<String, Locale> localeMap = new TreeMap<String, Locale>();
     	for (Locale l : Context.getAdministrationService().getPresentationLocales()) {
     		localeMap.put(l.getDisplayName(), l);
