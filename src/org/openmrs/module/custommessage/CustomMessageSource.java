@@ -240,7 +240,20 @@ public class CustomMessageSource extends AbstractMessageSource implements Mutabl
 		}
 		return null;
 	}
-	
+
+	/**
+	 * For some reason, this is needed to get the default text option in message tags working properly
+	 * @see AbstractMessageSource#getMessageInternal(String, Object[], Locale)
+	 */
+	@Override
+	protected String getMessageInternal(String code, Object[] args, Locale locale) {
+		String s = super.getMessageInternal(code, args, locale);
+		if (s == null || s.equals(code)) {
+			return null;
+		}
+		return s;
+	}
+
 	/**
 	 * @see GlobalPropertyListener#supportsPropertyName(String)
 	 */
