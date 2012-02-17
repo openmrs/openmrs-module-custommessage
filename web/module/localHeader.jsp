@@ -1,4 +1,4 @@
-<%@ include file="/WEB-INF/view/module/reporting/include.jsp"%>
+<%@ include file="/WEB-INF/template/include.jsp" %>
 <openmrs:extensionPoint pointId="org.openmrs.admin.list" type="html">
 	<openmrs:hasPrivilege privilege="${extension.requiredPrivilege}">
 		<c:if test="${extension.class.name == 'org.openmrs.module.custommessage.extension.AdministrationPageExtension'}">
