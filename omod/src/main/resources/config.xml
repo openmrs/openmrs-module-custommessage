@@ -2,12 +2,12 @@
 <module configVersion="1.0">	
 	<id>custommessage</id>
 	<name>Custom Message</name>
-	<version>1.1</version>
+	<version>1.2</version>
 	<package>org.openmrs.module.@MODULE_ID@</package>
 	<author>Partners In Health</author>
 	<description>Supports user-defined, live translations of OpenMRS</description>
 	<activator>@MODULE_PACKAGE@.ModuleActivator</activator>
-	<require_version>1.6</require_version>	
+	<require_version>1.8</require_version>	
 
 	<globalProperty>
 		<property>custommessage.showMessageCodes</property>
