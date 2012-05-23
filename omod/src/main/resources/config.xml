@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module configVersion="1.0">	
+	<id>custommessage</id>
+	<name>Custom Message</name>
+	<version>1.2</version>
+	<package>org.openmrs.module.@MODULE_ID@</package>
+	<author>Partners In Health</author>
+	<description>Supports user-defined, live translations of OpenMRS</description>
+	<activator>@MODULE_PACKAGE@.ModuleActivator</activator>
+	<require_version>1.8</require_version>	
+
+	<globalProperty>
+		<property>custommessage.showMessageCodes</property>
+		<defaultValue>false</defaultValue>
+		<description>If set to true, this will show the message codes rather than the translations</description>
+	</globalProperty>
+	
+	<extension>
+		<point>org.openmrs.admin.list</point>
+		<class>org.openmrs.module.custommessage.extension.AdministrationPageExtension</class>
+	</extension>
+	
+	<privilege>
+		<name>Manage Custom Messages</name>
+		<description>This privilege will give a user access editing custom message translations</description>
+	</privilege>
+	
+	<messages>
+		<lang>en</lang>
+		<file>messages.properties</file>
+	</messages>
+	
+	<mappingFiles>
+		CustomMessage.hbm.xml
+	</mappingFiles>	
+</module>
