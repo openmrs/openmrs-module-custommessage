@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+  <privilege privilege="Manage Custom Messages" description="This is a test privilege" uuid="d979d066-15e6-467c-9d4b-cb575ef97f0f"/>
+  <role role="Translator Role" description="This is a test translator role" uuid="94d62f4b-dd14-4597-be10-402def31094c"/>
+  <role role="Test Role" description="This is a test role" uuid="94d62f4b-dd14-4597-be10-402def310c49"/>
+  <role_privilege privilege="Manage Custom Messages" role="Translator Role" />
+  
+  <person person_id="9997" gender="M" dead="false" creator="1" date_created="2008-08-15 15:57:09.0" voided="false" uuid="dc99369f-f88e-4d54-be56-100e1ff45cf0"/>
+  <person_name person_name_id="997" preferred="true" person_id="9997" given_name="Hank" middle_name=" " family_name="Williams" creator="1" date_created="2005-01-01 00:00:00.0" voided="false" uuid="642e1d7f-00b8-45db-9705-b68341e61782"/>
+  
+  <person person_id="9998" gender="M" dead="false" creator="1" date_created="2008-08-15 15:57:09.0" voided="false" uuid="4e7f6953-0f86-4702-a06b-17112e8f144b"/>
+  <person_name person_name_id="998" preferred="true" person_id="9998" given_name="Jack" middle_name=" " family_name="Black" creator="1" date_created="2005-01-01 00:00:00.0" voided="false" uuid="6fc41fe3-b01f-42a8-a825-547d779b27d5"/>
+  
+  <person person_id="9999" gender="F" dead="false" creator="1" date_created="2008-08-15 15:46:47.0" voided="false" uuid="c4d125f7-5315-446c-9a45-c2f5e0fe96a8"/>
+  <person_name person_name_id="999" preferred="true" person_id="9999" given_name="Susy" middle_name=" " family_name="Kingman" creator="1" date_created="2005-01-01 00:00:00.0" voided="false" uuid="8d6142e2-f256-4fc7-a085-073646c66333"/>
+
+  <users user_id="9997" person_id="9997" system_id="8-3" username="another_test_user" password="4a1750c8607d0fa237de36c6305715c223415189" salt="c788c6ad82a157b712392ca695dfcf2eed193d7f" secret_question="secret" secret_answer="answer" creator="1" date_created="2008-08-15 15:57:09.0" changed_by="1" date_changed="2008-08-18 11:51:56.0" retired="false" retire_reason="" uuid="0bc18050-e132-11de-babe-001e378eb677"/>
+  <users user_id="9998" person_id="9998" system_id="7-5" username="test_user" password="4a1750c8607d0fa237de36c6305715c223415189" salt="c788c6ad82a157b712392ca695dfcf2eed193d7f" secret_question="" creator="1" date_created="2008-08-15 15:57:09.0" changed_by="1" date_changed="2008-08-18 11:51:56.0" retired="false" retire_reason="" uuid="06d05314-e132-11de-babe-001e378eb67e"/>
+  <users user_id="9999" person_id="9999" system_id="9-11" username="test_translator" password="4a1750c8607d0fa237de36c6305715c223415189" salt="c788c6ad82a157b712392ca695dfcf2eed193d7f" secret_question="" creator="1" date_created="2008-08-15 15:57:09.0" changed_by="1" date_changed="2008-08-18 11:51:56.0" retired="false" retire_reason="" uuid="06d05314-e132-11de-babe-001e378eb6ee"/>	  
+  
+  <user_role user_id="9999" role="Translator Role" />
+  <user_role user_id="9998" role="Test Role" />
+  
+  <user_property user_id="9999" property="custommessage.translateModeEnabled" property_value="true" />
+  <user_property user_id="9997" property="custommessage.translateModeEnabled" property_value="false" />
+  
+  <global_property property="custommessage.inplaceCustomizationEnabled" property_value="true" uuid="b7225607-d0c4-4e44-8be6-31e1ac7e102f" />
+  
+</dataset>

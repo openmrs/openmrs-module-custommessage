@@ -10,20 +10,46 @@
 	<require_version>1.8</require_version>	
 
 	<globalProperty>
-		<property>custommessage.showMessageCodes</property>
+		<property>@MODULE_ID@.showMessageCodes</property>
 		<defaultValue>false</defaultValue>
 		<description>If set to true, this will show the message codes rather than the translations</description>
 	</globalProperty>
 	
+	<globalProperty>
+		<property>@MODULE_ID@.inplaceCustomizationEnabled</property>
+		<defaultValue>false</defaultValue>
+		<description>Global property that enables in-place customization capabilities of this module</description>
+	</globalProperty>
+	
 	<extension>
 		<point>org.openmrs.admin.list</point>
-		<class>org.openmrs.module.custommessage.extension.AdministrationPageExtension</class>
+		<class>@MODULE_PACKAGE@.extension.AdministrationPageExtension</class>
+	</extension>
+	
+	<extension>
+		<point>org.openmrs.footerFullBeforeStatusBar</point>
+		<class>@MODULE_PACKAGE@.extension.ToggleTranslateModeExtension</class>
 	</extension>
 	
 	<privilege>
 		<name>Manage Custom Messages</name>
 		<description>This privilege will give a user access editing custom message translations</description>
 	</privilege>
+	
+	<dwr>
+		<allow>
+			<create creator="new" javascript="DWRCustomMessageService">
+				<param name="class" value="org.openmrs.module.@MODULE_ID@.web.dwr.DWRCustomMessageService"/>
+				<include method="toggleTranslateMode"/>
+			</create>
+		</allow>
+
+		<signatures>
+			<![CDATA[
+			import @MODULE_PACKAGE@.web.dwr.DWRCustomMessageService;
+			]]>
+		</signatures>	
+	</dwr>
 	
 	<messages>
 		<lang>en</lang>
@@ -32,5 +58,5 @@
 	
 	<mappingFiles>
 		CustomMessage.hbm.xml
-	</mappingFiles>	
+	</mappingFiles>
 </module>

@@ -15,27 +15,38 @@ package org.openmrs.module.custommessage;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.module.Activator;
+import org.openmrs.module.BaseModuleActivator;
+import org.openmrs.web.taglib.OpenmrsMessageTag;
 
 /**
  * This class contains the logic that is run every time this module
  * is either started or shutdown
  */
-public class ModuleActivator implements Activator {
+public class ModuleActivator extends BaseModuleActivator {
 
-	private Log log = LogFactory.getLog(this.getClass());
-
+	private static final Log LOG = LogFactory.getLog(ModuleActivator.class);
+	
 	/**
-	 * @see Activator#startup()
+	 * @see org.openmrs.module.BaseModuleActivator#started()
 	 */
-	public void startup() {
-		log.info("Starting custommessage module");
+	@Override
+	public void started() {
+		
+		// customize tag writer behavior for openmrs:message tag
+		OpenmrsMessageTag.setTagWriterBehavior(new CustomTagMessageWriterBehavior());
+		
+		LOG.info("Started custommessage module");
 	}
 	
 	/**
-	 *  @see Activator#shutdown()
+	 * @see org.openmrs.module.BaseModuleActivator#stopped()
 	 */
-	public void shutdown() {
-		log.info("Shutting down custommessage module");
+	@Override
+	public void stopped() {
+		
+		// reset openmrs:message tag writer behavior when module is stopped
+		OpenmrsMessageTag.setTagWriterBehavior(OpenmrsMessageTag.DEFAULT_WRITER_BEHAVIOUR);
+		
+		LOG.info("Shut down custommessage module");
 	}	
 }
