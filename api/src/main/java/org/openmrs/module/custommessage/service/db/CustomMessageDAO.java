@@ -14,8 +14,10 @@
 package org.openmrs.module.custommessage.service.db;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.openmrs.module.custommessage.CustomMessage;
+import org.openmrs.module.custommessage.service.CustomMessageService;
 
 /**
  * Core Custom Message DB Layer
@@ -41,6 +43,11 @@ public interface CustomMessageDAO {
 	 * @return all custom messages for the associated code
 	 */
 	public List<CustomMessage> getCustomMessagesForCode(String code);
+	
+	/**
+	 * @see {@link CustomMessageService#getCustomMessagesForCodeAndLocale(String, java.util.Locale)}
+	 */
+	public CustomMessage getCustomMessagesForCode(String code, Locale locale);
 	
 	/**
 	 * @param customMessage the Custom Message to save to the database

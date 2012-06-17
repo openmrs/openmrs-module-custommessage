@@ -5,6 +5,6 @@
 
 <hibernate-configuration>
 	<session-factory>
-		
+		<mapping resource="CustomMessage.hbm.xml" />
 	</session-factory>
 </hibernate-configuration>

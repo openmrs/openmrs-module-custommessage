@@ -30,32 +30,61 @@ public interface CustomMessageService extends OpenmrsService {
 	
 	/**
 	 * @return the CustomMessage with the given id
+	 * 
+	 * @should return null if there is no object with given id
+	 * @should return custom message by id
 	 */
 	public CustomMessage getCustomMessage(Integer id);
 	
 	/**
 	 * @return the CustomMessage with the given uuid
+	 * 
+	 * @should return null if no object found with given uuid
+	 * @should return custom message by uuid
 	 */
 	public CustomMessage getCustomMessageByUuid(String uuid);
 	
 	/**
 	 * @return all custom messages defined
+	 * 
+	 * @should get all custom messages
 	 */
 	public List<CustomMessage> getAllCustomMessages();
 	
 	/**
 	 * @return all custom messages for the associated code
+	 * 
+	 * @should return empty list if no message found
+	 * @should return custom messages for code
 	 */
 	public List<CustomMessage> getCustomMessagesForCode(String code);
+	
+	/**
+	 * Looks for custom message by given code and locale
+	 * 
+	 * @param code custom message code to filter messages with
+	 * @param locale the locale to filter custom messages in
+	 * @return custom message for the associated code and locale
+	 * 
+	 * @should return null if no message found
+	 * @should return custom message for code and locale
+	 */
+	public CustomMessage getCustomMessagesForCodeAndLocale(String code, Locale locale);
 
 	
 	/**
 	 * @param customMessage the Custom Message to save to the database
+	 * 
+	 * @should create a new custom message in database
+	 * @should update existing custom message in database
 	 */
 	public void saveCustomMessage(CustomMessage customMessage);
 	
 	/**
 	 * @param customMessage the Custom Message to delete from the database
+	 * 
+	 * @should fail if custom message is null
+	 * @should delete custom message
 	 */
 	public void deleteCustomMessage(CustomMessage customMessage);
 	

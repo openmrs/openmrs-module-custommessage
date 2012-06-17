@@ -76,6 +76,9 @@ public class CustomMessageServiceImpl extends BaseOpenmrsService implements Cust
 	 * @param customMessage the Custom Message to delete from the database
 	 */
 	public void deleteCustomMessage(CustomMessage customMessage) {
+		if (customMessage == null) {
+			throw new IllegalArgumentException("Can not delete null entity");
+		}
 		dao.deleteCustomMessage(customMessage);
 	}
 	
@@ -125,4 +128,12 @@ public class CustomMessageServiceImpl extends BaseOpenmrsService implements Cust
 	public void setDao(CustomMessageDAO dao) {
 		this.dao = dao;
 	}
+
+	/**
+	 * @see org.openmrs.module.custommessage.service.CustomMessageService#getCustomMessagesForCodeAndLocale(java.lang.String, java.util.Locale)
+	 */
+	@Override
+    public CustomMessage getCustomMessagesForCodeAndLocale(String code, Locale locale) {
+	    return dao.getCustomMessagesForCode(code, locale);
+    }
 }

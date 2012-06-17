@@ -14,12 +14,13 @@
 package org.openmrs.module.custommessage.service.db;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Expression;
+import org.hibernate.criterion.Restrictions;
 import org.openmrs.module.custommessage.CustomMessage;
 
 /**
@@ -44,7 +45,7 @@ public class HibernateCustomMessageDAO implements CustomMessageDAO {
 	@Override
 	public CustomMessage getCustomMessageByUuid(String uuid) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(CustomMessage.class);
-		criteria.add(Expression.eq("uuid", uuid));
+		criteria.add(Restrictions.eq("uuid", uuid));
 		return (CustomMessage)criteria.uniqueResult();
 	}
 
@@ -63,7 +64,7 @@ public class HibernateCustomMessageDAO implements CustomMessageDAO {
 	@SuppressWarnings("unchecked")
 	public List<CustomMessage> getCustomMessagesForCode(String code) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(CustomMessage.class);
-		criteria.add(Expression.eq("code", code));
+		criteria.add(Restrictions.eq("code", code));
 		return criteria.list();
 	}
 	
@@ -87,5 +88,25 @@ public class HibernateCustomMessageDAO implements CustomMessageDAO {
 	 */
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
+    }
+
+    /**
+     * @see org.openmrs.module.custommessage.service.db.CustomMessageDAO#getCustomMessagesForCode(java.lang.String, java.util.Locale)
+     */
+	@SuppressWarnings("unchecked")
+    @Override
+    public CustomMessage getCustomMessagesForCode(String code, Locale locale) {
+		CustomMessage customMessage = null;
+		// build criteria for fetching custom messages with
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(CustomMessage.class);
+		criteria.add(Restrictions.eq("code", code));
+		criteria.add(Restrictions.eq("locale", locale));
+		List<CustomMessage> result = criteria.list();
+		
+		// if list is not null and not empty get the first element
+		if (result != null && !result.isEmpty()) {
+			customMessage = result.get(0);
+		}
+	    return customMessage;
     }
 }

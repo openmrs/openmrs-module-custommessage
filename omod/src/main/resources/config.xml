@@ -41,12 +41,16 @@
 			<create creator="new" javascript="DWRCustomMessageService">
 				<param name="class" value="org.openmrs.module.@MODULE_ID@.web.dwr.DWRCustomMessageService"/>
 				<include method="toggleTranslateMode"/>
+				<include method="save"/>
+				<include method="get"/>
 			</create>
 		</allow>
 
 		<signatures>
 			<![CDATA[
 			import @MODULE_PACKAGE@.web.dwr.DWRCustomMessageService;
+			DWRCustomMessageService.save(String code, String message, String locale);
+			DWRCustomMessageService.get(String code, String locale);
 			]]>
 		</signatures>	
 	</dwr>
