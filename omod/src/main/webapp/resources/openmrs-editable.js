@@ -9,6 +9,13 @@ function handleTranslateMode(translateMode) {
     	// but skip input with #translateButton in this case
     	jQuery("input[type=button],input[type=submit]").not("#translateButton").each(function(e) {
     		var button = jQuery('<button />');
+    		// customize click listener on button element in order to fix https://tickets.openmrs.org/browse/CSTM-13
+    		button.click(function(event) {
+    			// allow button click only when shift key is being held down
+    	        if (!event.shiftKey) {
+    	            event.preventDefault();
+    	        }
+    	    });
     		button.attr("id", jQuery(this).attr("id"));
     		button.html(jQuery(this).val());
     		jQuery(this).replaceWith(button);
@@ -34,33 +41,12 @@ function handleTranslateMode(translateMode) {
 	        })
     	});
     	
-    	 // add custom input type in order to fix https://tickets.openmrs.org/browse/CSTM-13
-        jQuery.editable.addInputType('customtext', {
-        	element : function(settings, original) {
-                var input = jQuery('<input />');
-                if (settings.width  != 'none') { input.attr('width', settings.width);  }
-                if (settings.height != 'none') { input.attr('height', settings.height); }
-                /* https://bugzilla.mozilla.org/show_bug.cgi?id=236791 */
-                //input[0].setAttribute('autocomplete','off');
-                input.attr('autocomplete','off');
-                // disable form submitting when space-bar is pressed
-                input.bind("keypress", function(event) {
-                	if (event.keyCode == 32) {
-                		event.stopPropagation();
-                	}
-                });
-                jQuery(this).append(input);
-                return(input);
-            }
-        });
-        
     	// make translatable text to be editable
     	jQuery("span.translate").editable(saveMessage, 
     	{
     		id		: "code",
     		style	: "inherit",
     		data 	: getMessage,
-    		type	: "customtext",
     		onblur	: handleBlur
     	});
     }
@@ -145,25 +131,17 @@ function handleBlur(value, settings) {
 		var dialogElement = confirmDialog.dialog( {
 		    buttons: {
             	"Yes" : function() { 
-            		// cancel in-line form editing
-            		jQuery(self).html(self.revert);
-    		    	self.editing   = false;
-    		        if (!jQuery.trim(jQuery(self).html())) {
-    		        	jQuery(self).html(settings.placeholder);
-    		        }
-    		        /* Show tooltip again. */
-    		        if (settings.tooltip) {
-    		            jQuery(self).attr('title', settings.tooltip);                
-    		        }
+            		reset(self, settings);
     		        jQuery(this).dialog("close");
             	}, 
             	"No"  : function() {
-            		input.focus();
             		jQuery(this).dialog("close");
+            		input.focus();
             	}
 		    },
 		    closeOnEscape: false,
-		    autoOpen: false
+		    autoOpen: false,
+		    modal: true
 		} );
 		// IE has it's own opinion about jQuery dialog showing, so, use lazy opening
 		dialogElement.dialog("open");
@@ -177,15 +155,24 @@ function handleBlur(value, settings) {
 	        collision	: 'fit'
 	    });
 	} else {
-		// cancel in-line form editing
-		jQuery(this).html(this.revert);
-		this.editing   = false;
-        if (!jQuery.trim(jQuery(this).html())) {
-        	jQuery(this).html(settings.placeholder);
-        }
-        /* Show tooltip again. */
-        if (settings.tooltip) {
-            jQuery(this).attr('title', settings.tooltip);                
-        }
+		reset(this, settings);
 	}
+}
+
+/**
+ * Resets in-line editable element within passed in container
+ * @param container the container that contains in-line input to be reset
+ * @param settings the complete setting instance received from Jeditable plugin
+ */
+function reset(container, settings) {
+	// cancel in-line form editing
+	jQuery(container).html(container.revert);
+	container.editing   = false;
+    if (!jQuery.trim(jQuery(container).html())) {
+    	jQuery(container).html(settings.placeholder);
+    }
+    /* show tooltip again. */
+    if (settings.tooltip) {
+        jQuery(container).attr('title', settings.tooltip);                
+    }
 }
