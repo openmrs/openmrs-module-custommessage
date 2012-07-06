@@ -39,5 +39,51 @@
 			baseTableName="custommessage_messages" baseColumnNames="updated_by"
 			referencedTableName="users" referencedColumnNames="user_id"/>
     </changeSet>
+    
+    <changeSet id="custommessage-2012-06-30-20:45" author="mvorobey">
+		<preConditions onFail="MARK_RAN">
+			<not><tableExists tableName="custommessage_locations"/></not>
+		</preConditions>
+		<comment>
+			Creates a table custommessage_locations for storing locations from where comes origin messages
+		</comment>
+		<createTable tableName="custommessage_locations">
+            <column defaultValue="" name="location_id" type="varchar(128)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(255)"/>
+            <column name="uuid" type="char(38)" />
+		</createTable>
+		<modifySql dbms="mssql">
+                <replace replace="CHAR(38)" with="UNIQUEIDENTIFIER NOT NULL DEFAULT NEWSEQUENTIALID()" />
+        </modifySql>
+    </changeSet>
+    
+    <changeSet id="custommessage-2012-06-30-20:46" author="mvorobey">
+    	<preConditions onFail="MARK_RAN">
+			<not><columnExists tableName="custommessage_messages" columnName="location_id"/></not>
+		</preConditions>
+		<comment>
+			Add the column location_id type to custommessage_messages table
+		</comment>
+		<addColumn tableName="custommessage_messages">
+			<column name="location_id" type="varchar(128)">
+				<constraints nullable="false" />
+			</column>
+		</addColumn>
+		<addForeignKeyConstraint constraintName="custommessage_messages_location_id"
+			baseTableName="custommessage_messages" baseColumnNames="location_id"
+			referencedTableName="custommessage_locations" referencedColumnNames="location_id"/>
+    </changeSet>
+    
+    <changeSet id="custommessage-2012-07-02-21:29" author="mvorobey">
+    	<comment>
+			Add row for OpenMRS core into custommessage_locations table as this project present by default
+		</comment>
+        <insert tableName="custommessage_locations">
+            <column name="location_id" value="core"/>
+            <column name="name" value="Core"/>
+        </insert>
+    </changeSet>
  
 </databaseChangeLog>

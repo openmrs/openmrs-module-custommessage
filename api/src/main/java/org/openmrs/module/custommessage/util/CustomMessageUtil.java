@@ -11,10 +11,14 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-package org.openmrs.module.custommessage;
+package org.openmrs.module.custommessage.util;
 
+import org.apache.commons.lang.StringUtils;
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.ModuleFactory;
+import org.openmrs.module.custommessage.CustomMessageConstants;
+import org.openmrs.module.custommessage.service.CustomMessageService;
 
 /**
  * This class contains convenient methods for working with custom messages entities, related global
@@ -23,8 +27,8 @@ import org.openmrs.api.context.Context;
 public class CustomMessageUtil {
 	
 	/**
-	 * Determines whether module translation capabilities is enabled or not globally. The decision is made
-	 * considering with value of global property specified by
+	 * Determines whether module translation capabilities is enabled or not globally. The decision
+	 * is made considering with value of global property specified by
 	 * {@link CustomMessageConstants#GLOBAL_PROPERTY_INPLACE_CUSTOMIZATION_ENABLED}
 	 * 
 	 * @return true if in-place translation capabilities is enabled, false otherwise
@@ -40,7 +44,6 @@ public class CustomMessageUtil {
 	 * {@link CustomMessageConstants#USER_PROPERTY_TRANSLATE_MODE_ENABLED}
 	 * 
 	 * @return true if translate mode is enabled, false otherwise
-	 * 
 	 * @should return false if in-place customization disabled
 	 * @should return false if there is no authenticated user
 	 * @should return false if user does not have translate mode property
@@ -81,5 +84,4 @@ public class CustomMessageUtil {
 			throw new IllegalStateException("Can not toggle translate mode for not authorized user");
 		}
 	}
-	
 }

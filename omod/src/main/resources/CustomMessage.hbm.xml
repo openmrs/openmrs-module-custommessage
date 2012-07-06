@@ -12,6 +12,7 @@
 		<property name="code" type="string" not-null="true"/>
 		<property name="locale" type="locale" not-null="true"/>
 		<property name="message" type="string" not-null="true"/>
+		<many-to-one name="messageLocation" class="org.openmrs.module.custommessage.MessagesLocation" column="location_id" not-null="true" />
 		<many-to-one name="updatedBy" class="org.openmrs.User" column="updated_by" not-null="true" />
 		<property name="updatedDatetime" type="java.util.Date" column="updated_datetime" not-null="true" />
 	</class>

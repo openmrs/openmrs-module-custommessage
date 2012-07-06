@@ -17,7 +17,7 @@ import org.openmrs.User;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.Extension;
 import org.openmrs.module.custommessage.CustomMessageConstants;
-import org.openmrs.module.custommessage.CustomMessageUtil;
+import org.openmrs.module.custommessage.util.CustomMessageUtil;
 import org.openmrs.web.WebConstants;
 
 /**

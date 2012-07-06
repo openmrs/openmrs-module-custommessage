@@ -7,7 +7,7 @@
 	<author>Partners In Health</author>
 	<description>Supports user-defined, live translations of OpenMRS</description>
 	<activator>@MODULE_PACKAGE@.ModuleActivator</activator>
-	<require_version>1.8</require_version>	
+	<require_version>1.6</require_version>	
 
 	<globalProperty>
 		<property>@MODULE_ID@.showMessageCodes</property>
@@ -17,7 +17,7 @@
 	
 	<globalProperty>
 		<property>@MODULE_ID@.inplaceCustomizationEnabled</property>
-		<defaultValue>false</defaultValue>
+		<defaultValue>true</defaultValue>
 		<description>Global property that enables in-place customization capabilities of this module</description>
 	</globalProperty>
 	
@@ -62,5 +62,6 @@
 	
 	<mappingFiles>
 		CustomMessage.hbm.xml
+		MessagesLocation.hbm.xml
 	</mappingFiles>
 </module>

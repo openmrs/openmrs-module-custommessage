@@ -33,12 +33,35 @@ function handleTranslateMode(translateMode) {
 	    		}
 	        })
     	});
+    	
+    	 // add custom input type in order to fix https://tickets.openmrs.org/browse/CSTM-13
+        jQuery.editable.addInputType('customtext', {
+        	element : function(settings, original) {
+                var input = jQuery('<input />');
+                if (settings.width  != 'none') { input.attr('width', settings.width);  }
+                if (settings.height != 'none') { input.attr('height', settings.height); }
+                /* https://bugzilla.mozilla.org/show_bug.cgi?id=236791 */
+                //input[0].setAttribute('autocomplete','off');
+                input.attr('autocomplete','off');
+                // disable form submitting when space-bar is pressed
+                input.bind("keypress", function(event) {
+                	if (event.keyCode == 32) {
+                		event.stopPropagation();
+                	}
+                });
+                jQuery(this).append(input);
+                return(input);
+            }
+        });
+        
     	// make translatable text to be editable
     	jQuery("span.translate").editable(saveMessage, 
     	{
     		id		: "code",
     		style	: "inherit",
-    		data 	: getMessage
+    		data 	: getMessage,
+    		type	: "customtext",
+    		onblur	: handleBlur
     	});
     }
     // set corresponding text as caption of translate button
@@ -51,6 +74,7 @@ function handleTranslateMode(translateMode) {
         jQuery(this).val("Translate: " + (translateMode ? "ON" : "OFF"));
         location.reload();
 	});
+    
 }
 
 /**
@@ -101,4 +125,61 @@ function getMessage(value, settings) {
 		}
 	});
 	return message;
+}
+
+/**
+ * Called right after user blurs the input element, shows confirmation dialog about possible loosing of changes if user made some edit of text inside input 
+ * 
+ * @param value
+ *            the text to be edited in-line
+ * @param settings the complete setting instance received from Jeditable plugin
+ */
+function handleBlur(value, settings) {
+	// if in-line input value has changed 
+	var inLineForm = jQuery("form", this);
+	if (value != this.revert) {
+		var input = jQuery("input", inLineForm);
+		var self = this;
+		// create dynamic confirmation dialog about loosing changes
+		var confirmDialog = jQuery("<div id=confirmDialog title='Confirm loosing changes'>Are you sure you want to cancel in-line editing ?</div>");
+		confirmDialog.dialog( {
+			position: { 
+		        my: 'center',
+		        at: 'bottom',
+		        of: input
+		    }, 
+		    buttons: {
+            	"Yes" : function() { 
+            		// cancel in-line form editing
+            		jQuery(self).html(self.revert);
+    		    	self.editing   = false;
+    		        if (!jQuery.trim(jQuery(self).html())) {
+    		        	jQuery(self).html(settings.placeholder);
+    		        }
+    		        /* Show tooltip again. */
+    		        if (settings.tooltip) {
+    		            jQuery(self).attr('title', settings.tooltip);                
+    		        }
+    		        jQuery(this).dialog("close");
+            	}, 
+            	"No"  : function() {
+            		input.focus();
+            		jQuery(this).dialog("close");
+            	}
+		    },
+		    closeOnEscape: false,
+		    open: function(event, ui) { jQuery(".ui-dialog-titlebar-close", ui.dialog || ui).hide(); }
+		} );
+	} else {
+		// cancel in-line form editing
+		jQuery(this).html(this.revert);
+		this.editing   = false;
+        if (!jQuery.trim(jQuery(this).html())) {
+        	jQuery(this).html(settings.placeholder);
+        }
+        /* Show tooltip again. */
+        if (settings.tooltip) {
+            jQuery(this).attr('title', settings.tooltip);                
+        }
+	}
 }

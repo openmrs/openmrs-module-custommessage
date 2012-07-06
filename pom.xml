@@ -64,7 +64,7 @@
 	</dependencyManagement>
 
 	<properties>
-		<openMRSVersion>1.10.0-SNAPSHOT</openMRSVersion>
+		<openMRSVersion>1.9.1-SNAPSHOT</openMRSVersion>
 	</properties>
 
 	<build>
