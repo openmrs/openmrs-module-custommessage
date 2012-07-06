@@ -55,8 +55,13 @@ public class ToggleTranslateModeExtension extends Extension {
 			    CustomMessageConstants.USER_PROPERTY_TRANSLATE_MODE_ENABLED, "false");
 			return String
 			        .format(
-			            "<script src=\"/%s/dwr/interface/DWRCustomMessageService.js\"></script>\n<script src=\"/%s/moduleResources/custommessage/jquery.jeditable-1.7.2.js\" type=\"text/javascript\"></script>\n<script src=\"/%s/moduleResources/custommessage/openmrs-editable.js\" type=\"text/javascript\"></script>\n<script  type=\"text/javascript\">\njQuery(document).ready(function() {\n\n  // handle translate mode properly\n  var translateMode = %s;\n    handleTranslateMode(translateMode);\n});\n</script>\n<input type=\"button\" id=\"translateButton\"/>",
-			            contextPath, contextPath, contextPath, translateModeStatus);
+			            "<script src=\"/%s/dwr/interface/DWRCustomMessageService.js\"></script>\n" +
+			            "<script src=\"/%s/moduleResources/custommessage/jquery.jeditable-1.7.2.js\" type=\"text/javascript\"></script>\n" +
+			            "<script src=\"/%s/moduleResources/custommessage/jquery.ui.position.js\" type=\"text/javascript\"></script>\n" +
+			            "<script src=\"/%s/moduleResources/custommessage/openmrs-editable.js\" type=\"text/javascript\"></script>\n" +
+			            "<script  type=\"text/javascript\">\njQuery(document).ready(function() {\n\n  // handle translate mode properly\n  var translateMode = %s;\n    handleTranslateMode(translateMode);\n});\n</script>\n" +
+			            "<input type=\"button\" id=\"translateButton\"/>",
+			            contextPath, contextPath, contextPath, contextPath, translateModeStatus);
 		} else {
 			return bodyContent;
 		}

@@ -142,12 +142,7 @@ function handleBlur(value, settings) {
 		var self = this;
 		// create dynamic confirmation dialog about loosing changes
 		var confirmDialog = jQuery("<div id=confirmDialog title='Confirm loosing changes'>Are you sure you want to cancel in-line editing ?</div>");
-		confirmDialog.dialog( {
-			position: { 
-		        my: 'center',
-		        at: 'bottom',
-		        of: input
-		    }, 
+		var dialogElement = confirmDialog.dialog( {
 		    buttons: {
             	"Yes" : function() { 
             		// cancel in-line form editing
@@ -168,8 +163,19 @@ function handleBlur(value, settings) {
             	}
 		    },
 		    closeOnEscape: false,
-		    open: function(event, ui) { jQuery(".ui-dialog-titlebar-close", ui.dialog || ui).hide(); }
+		    autoOpen: false
 		} );
+		// IE has it's own opinion about jQuery dialog showing, so, use lazy opening
+		dialogElement.dialog("open");
+		// disable X close button for this dialog
+		dialogElement.dialog( "widget" ).find( ".ui-dialog-titlebar-close" ).hide();
+		// place dialog beside an input element
+		dialogElement.dialog( "widget" ).position({ 
+	        my			: 'left top',
+	        at			: 'right bottom',
+	        of			: input,
+	        collision	: 'fit'
+	    });
 	} else {
 		// cancel in-line form editing
 		jQuery(this).html(this.revert);
