@@ -12,9 +12,9 @@
 	<url>https://wiki.openmrs.org/x/BBEJAg</url>
 
 	<scm>
-		<connection>scm:svn:http://svn.openmrs.org/openmrs-modules/custommessage/trunk/</connection>
-		<developerConnection>scm:svn:http://svn.openmrs.org/openmrs-modules/custommessage/trunk/</developerConnection>
-		<url>http://svn.openmrs.org/openmrs-modules/custommessage/trunk/</url>
+		<connection>scm:git:https://github.com/OpenMRS/openmrs-module-custommessage</connection>
+		<developerConnection>scm:git:https://github.com/OpenMRS/openmrs-module-custommessage</developerConnection>
+		<url>https://github.com/OpenMRS/openmrs-module-custommessage</url>
 	</scm>
 
 	<modules>
@@ -64,7 +64,7 @@
 	</dependencyManagement>
 
 	<properties>
-		<openMRSVersion>1.10.0-SNAPSHOT</openMRSVersion>
+		<openMRSVersion>1.8.4-SNAPSHOT</openMRSVersion>
 	</properties>
 
 	<build>
@@ -74,8 +74,8 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
 					<configuration>
-						<target>1.5</target>
-						<source>1.5</source>
+						<target>1.6</target>
+						<source>1.6</source>
 					</configuration>
 				</plugin>
 				<plugin>
