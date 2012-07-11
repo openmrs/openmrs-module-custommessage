@@ -187,6 +187,7 @@ public class CustomMessageServiceImpl extends BaseOpenmrsService implements Cust
 	 */
 	@Override
 	public MessagesLocation resolveLocationForCode(String messageCode) {
+		CustomMessageService customMessageService = Context.getService(CustomMessageService.class);
 		MessagesLocation messageLocation = null;
 		// if message code is not specified raise an error
 		if (StringUtils.isBlank(messageCode)) {
@@ -195,22 +196,22 @@ public class CustomMessageServiceImpl extends BaseOpenmrsService implements Cust
 		// iterate over the set of successfully started modules
 		for (Module module : ModuleFactory.getStartedModules()) {
 			if (messageCode.startsWith(module.getModuleId().concat("."))) {
-				messageLocation = getMessagesLocation(module.getModuleId());
+				messageLocation = customMessageService.getMessagesLocation(module.getModuleId());
 				if (messageLocation == null) {
 					// if location does not exist yet, create in and save into database
 					messageLocation = new MessagesLocation(module.getModuleId(), module.getName());
-					saveMessagesLocation(messageLocation);
+					customMessageService.saveMessagesLocation(messageLocation);
 				}
 				return messageLocation;
 			}
 		}
 		// return default location meaning that it's core message as no matching module id is found
-		messageLocation = getMessagesLocation(CustomMessageConstants.CUSTOM_MESSAGES_LOCATION_DEFAULT_ID);
+		messageLocation = customMessageService.getMessagesLocation(CustomMessageConstants.CUSTOM_MESSAGES_LOCATION_DEFAULT_ID);
 		if (messageLocation == null) {
 			// if core location does not exist yet, create in and save into database
 			messageLocation = new MessagesLocation(CustomMessageConstants.CUSTOM_MESSAGES_LOCATION_DEFAULT_ID,
 			        CustomMessageConstants.CUSTOM_MESSAGES_LOCATION_DEFAULT_NAME);
-			saveMessagesLocation(messageLocation);
+			customMessageService.saveMessagesLocation(messageLocation);
 		}
 		return messageLocation;
 	}

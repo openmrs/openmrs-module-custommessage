@@ -9,7 +9,7 @@
 <openmrs:htmlInclude file="${pageContext.request.contextPath}/moduleResources/custommessage/dataTables/css/table.css"/>
 <openmrs:htmlInclude file="${pageContext.request.contextPath}/moduleResources/custommessage/dataTables/css/custom.css"/>
 
-<openmrs:htmlInclude file="${pageContext.request.contextPath}/moduleResources/custommessage/jquery-1.3.2.min.js"/>
+<openmrs:htmlInclude file="${pageContext.request.contextPath}/moduleResources/custommessage/jquery-1.7.2.min.js"/>
 <openmrs:htmlInclude file="${pageContext.request.contextPath}/moduleResources/custommessage/jquery-ui/js/jquery-ui-1.7.2.custom.min.js"/>
 <openmrs:htmlInclude file='${pageContext.request.contextPath}/moduleResources/custommessage/dataTables/jquery.dataTables.min.js'/>
 
