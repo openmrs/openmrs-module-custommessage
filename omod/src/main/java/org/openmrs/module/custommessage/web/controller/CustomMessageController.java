@@ -181,32 +181,34 @@ public class CustomMessageController {
 	        throws IOException {
 		CustomMessageSource cms = (CustomMessageSource) Context.getMessageSourceService().getActiveMessageSource();
 		cms.refreshCache();
-		Map<String, PresentationMessage> messageMap = new TreeMap<String, PresentationMessage>(cms.getCachedMessages().get(
-		    locale));
-		Map<String, String> availableLocations = Context.getService(CustomMessageService.class)
-		        .getAvailableMessagesLocationsMap();
-		response.setContentType("text/plain");
-		response.addHeader("Content-disposition",
-		    String.format("attachment; filename=%s_messages_%s.properties", locationId, locale));
-		for (String code : messageMap.keySet()) {
-			String prefix = StringUtils.substringBefore(code, ".");
-			// when passed in location is core
-			if (StringUtils.equals(locationId, CustomMessageConstants.CUSTOM_MESSAGES_LOCATION_DEFAULT_ID)) {
-				// if message code prefix is not listed as key of available messages 
-				// locations this means that this message is related to core location
-				if (!availableLocations.containsKey(prefix)) {
-					PresentationMessage pm = messageMap.get(code);
-					if (pm != null && StringUtils.isNotBlank(pm.getMessage())) {
-						response.getWriter().write(code + " = " + pm.getMessage() + System.getProperty("line.separator"));
+		PresentationMessageMap cachedMessages = cms.getCachedMessages().get(LocaleUtility.fromSpecification(locale));
+		if (cachedMessages != null) {
+			Map<String, PresentationMessage> messageMap = new TreeMap<String, PresentationMessage>(cachedMessages);
+			Map<String, String> availableLocations = Context.getService(CustomMessageService.class)
+			        .getAvailableMessagesLocationsMap();
+			response.setContentType("text/plain");
+			response.addHeader("Content-disposition",
+			    String.format("attachment; filename=%s_messages_%s.properties", locationId, locale));
+			for (String code : messageMap.keySet()) {
+				String prefix = StringUtils.substringBefore(code, ".");
+				// when passed in location is core
+				if (StringUtils.equals(locationId, CustomMessageConstants.CUSTOM_MESSAGES_LOCATION_DEFAULT_ID)) {
+					// if message code prefix is not listed as key of available messages 
+					// locations this means that this message is related to core location
+					if (!availableLocations.containsKey(prefix)) {
+						PresentationMessage pm = messageMap.get(code);
+						if (pm != null && StringUtils.isNotBlank(pm.getMessage())) {
+							response.getWriter().write(code + " = " + pm.getMessage() + System.getProperty("line.separator"));
+						}
 					}
-				}
-			} else {
-				// if message code prefix is equal to passed in location id
-				if (StringUtils.equals(locationId, prefix)) {
-					PresentationMessage pm = messageMap.get(code);
-					if (pm != null && StringUtils.isNotBlank(pm.getMessage())) {
-						response.getWriter().write(
-						    String.format("%s = %s%s", code, pm.getMessage(), System.getProperty("line.separator")));
+				} else {
+					// if message code prefix is equal to passed in location id
+					if (StringUtils.equals(locationId, prefix)) {
+						PresentationMessage pm = messageMap.get(code);
+						if (pm != null && StringUtils.isNotBlank(pm.getMessage())) {
+							response.getWriter().write(
+							    String.format("%s = %s%s", code, pm.getMessage(), System.getProperty("line.separator")));
+						}
 					}
 				}
 			}

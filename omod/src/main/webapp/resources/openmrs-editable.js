@@ -14,6 +14,11 @@ function handleTranslateMode(translateMode) {
     			// allow button click only when shift key is being held down
     	        if (!event.shiftKey) {
     	            event.preventDefault();
+    	            // mozilla assumes that click event is received from button rather
+    	            // than from inner span element, so, trigger that event on span manually 
+    	            if (event.target == this) {
+    	            	jQuery('span.translate', this).click();
+    	            }
     	        }
     	    });
     		button.attr("id", jQuery(this).attr("id"));
@@ -41,12 +46,31 @@ function handleTranslateMode(translateMode) {
 	        })
     	});
     	
+    	// add custom input type in order to prevent in-line edit on button again (mozilla)
+        jQuery.editable.addInputType('customtext', {
+        	element : function(settings, original) {
+                var input = jQuery('<input />');
+                if (settings.width  != 'none') { input.attr('width', settings.width);  }
+                if (settings.height != 'none') { input.attr('height', settings.height); }
+                /* https://bugzilla.mozilla.org/show_bug.cgi?id=236791 */
+                //input[0].setAttribute('autocomplete','off');
+                input.attr('autocomplete','off');
+                // prevent in-line edit on element again
+                jQuery(this).bind("click", function(event) {
+                	event.stopPropagation();
+                });
+                jQuery(this).append(input);
+                return(input);
+            }
+        });
+    	
     	// make translatable text to be editable
     	jQuery("span.translate").editable(saveMessage, 
     	{
     		id		: "code",
     		style	: "inherit",
     		data 	: getMessage,
+    		type	: "customtext",
     		onblur	: handleBlur
     	});
     }
@@ -139,7 +163,12 @@ function handleBlur(value, settings) {
             		input.focus();
             	}
 		    },
-		    closeOnEscape: false,
+		    close: function(e) { 
+		    	// escape should "undo" the dialog
+		    	if (e.which == 27) {
+		    		input.focus();
+		    	}
+		    },
 		    autoOpen: false,
 		    modal: true
 		} );

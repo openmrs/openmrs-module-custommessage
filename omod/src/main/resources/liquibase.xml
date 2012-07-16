@@ -71,7 +71,16 @@
 				<constraints nullable="false" />
 			</column>
 		</addColumn>
-		<addForeignKeyConstraint constraintName="custommessage_messages_location_id"
+	</changeSet>
+    
+    <changeSet id="custommessage-2012-07-12-19:21" author="mvorobey">
+    	<preConditions onFail="MARK_RAN">
+    		<not><foreignKeyConstraintExists foreignKeyName="custommessage_messages_location_id"/></not>
+    	</preConditions>
+    	<comment>
+			Add foreign key constraint for custommessage_messages table in order to connect it with custommessage_locations using many-to-one relationship
+		</comment>
+        <addForeignKeyConstraint constraintName="custommessage_messages_location_id"
 			baseTableName="custommessage_messages" baseColumnNames="location_id"
 			referencedTableName="custommessage_locations" referencedColumnNames="location_id"/>
     </changeSet>
