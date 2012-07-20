@@ -1,68 +1,17 @@
 
+// global variable that keeps reference to last edited in-line element
+var lastEdited;
+
 /**
  * Handles given translate mode value
  */
 function handleTranslateMode(translateMode) {
 	// if translate mode is enabled
     if (translateMode) {
-    	// make all inputs and buttons to be buttons having tag body 
-    	// but skip input with #translateButton in this case
-    	jQuery("input[type=button],input[type=submit]").not("#translateButton").each(function(e) {
-    		var button = jQuery('<button />');
-    		// customize click listener on button element in order to fix https://tickets.openmrs.org/browse/CSTM-13
-    		button.click(function(event) {
-    			// allow button click only when shift key is being held down
-    	        if (!event.shiftKey) {
-    	            event.preventDefault();
-    	            // mozilla assumes that click event is received from button rather
-    	            // than from inner span element, so, trigger that event on span manually 
-    	            if (event.target == this) {
-    	            	jQuery('span.translate', this).click();
-    	            }
-    	        }
-    	    });
-    		button.attr("id", jQuery(this).attr("id"));
-    		button.html(jQuery(this).val());
-    		jQuery(this).replaceWith(button);
-    	});
-    	// sanitize spans having in-place editable
-    	// tag body in textual representation
-    	jQuery("span").each(function() {
-    		jQuery(this).contents().filter(function() {
-	    	    return this.nodeType == Node.TEXT_NODE;
-	    	}).each(function (index) {
-	    		var bodyStr = jQuery(this).text();
-	    		// if element has a body, and this is a span, handle it
-	    		if (bodyStr && (bodyStr == bodyStr.match(new RegExp("<\s*span[^>]*>(.*?)<\s*/\s*span>", "g")))) {
-	    			var element = jQuery(bodyStr);
-	    			// if element can be created off the body text
-	    			// and it is a span having .translate class
-	    			if (element && element.is("span.translate")) {
-	    				// add span to DOM and remove text node
-	    	        	jQuery(this).parent().append(element);
-	    	        	jQuery(this).remove();
-	    			}
-	    		}
-	        })
-    	});
-    	
-    	// add custom input type in order to prevent in-line edit on button again (mozilla)
-        jQuery.editable.addInputType('customtext', {
-        	element : function(settings, original) {
-                var input = jQuery('<input />');
-                if (settings.width  != 'none') { input.attr('width', settings.width);  }
-                if (settings.height != 'none') { input.attr('height', settings.height); }
-                /* https://bugzilla.mozilla.org/show_bug.cgi?id=236791 */
-                //input[0].setAttribute('autocomplete','off');
-                input.attr('autocomplete','off');
-                // prevent in-line edit on element again
-                jQuery(this).bind("click", function(event) {
-                	event.stopPropagation();
-                });
-                jQuery(this).append(input);
-                return(input);
-            }
-        });
+    	// make all inputs to be in-line editable buttons 
+    	makeEditableButtons();
+    	// sanitize all spans in order to avoid possible break of existing widgets on page
+    	sanitizeSpans();
     	
     	// make translatable text to be editable
     	jQuery("span.translate").editable(saveMessage, 
@@ -70,7 +19,6 @@ function handleTranslateMode(translateMode) {
     		id		: "code",
     		style	: "inherit",
     		data 	: getMessage,
-    		type	: "customtext",
     		onblur	: handleBlur
     	});
     }
@@ -85,6 +33,82 @@ function handleTranslateMode(translateMode) {
         location.reload();
 	});
     
+}
+
+/**
+ * Makes all inputs and buttons to be buttons having tag body, but skip input
+ * with #translateButton in this case
+ */
+function makeEditableButtons() {
+	jQuery("input[type=button],input[type=submit]").not("#translateButton").each(function(e) {
+		var button = jQuery('<button />');
+		// preserve bounded click handlers and onclick attribute on button element  
+		// to be called, when user presses button holding down shift key
+		var clickHandlers = [];
+		// push onclick handler attribute into click handlers array as first element
+		if (jQuery(this).attr("onclick")) {
+			clickHandlers.push(jQuery(this).attr("onclick"));
+		}
+		// then iterate over existing click handlers and push them into array one by one
+		if (jQuery(this).data("events")) {
+			jQuery.each(jQuery(this).data("events"), function() {
+			    jQuery.each(this, function(j, h) {
+			    	clickHandlers.push(h.handler);
+			    });
+			});
+		}
+		
+		// customize click listener on button element in order to fix https://tickets.openmrs.org/browse/CSTM-13
+		button.click(function(event) {
+			// allow button click only when shift key is being held down
+	        if (!event.shiftKey) {
+	            event.preventDefault();
+    	         // mozilla assumes that click event is received from button rather
+    	         // than from inner span element, so, trigger that event on span manually 
+	             var element = jQuery('span.translate', this);
+    	         if (event.target == this && element && lastEdited != element[0]) {
+    	        	 element.click();
+    	         } else if (element && !element[0].editing){
+    	        	 // reset last edited element in order to allow further editing of this element
+    	        	 lastEdited = null;
+    	         }
+	        } else {
+	        	// call function that was set as onclick attribute on button and all preserved click handlers
+	        	jQuery.each(clickHandlers, function(index, handler) {
+	        		if (jQuery.isFunction(handler)) {
+	        			handler.apply(this, [event]);
+                    }
+	    		});
+	        }
+	    });
+		button.attr("id", jQuery(this).attr("id"));
+		button.html(jQuery(this).val());
+		jQuery(this).replaceWith(button);
+	});
+}
+
+/**
+ * Sanitizes all spans having in-place editable tag body in textual representation
+ */
+function sanitizeSpans() {
+	jQuery("span").each(function() {
+		jQuery(this).contents().filter(function() {
+    	    return this.nodeType == Node.TEXT_NODE;
+    	}).each(function (index) {
+    		var bodyStr = jQuery(this).text();
+    		// if element has a body, and this is a span, handle it
+    		if (bodyStr && (bodyStr == bodyStr.match(new RegExp("<\s*span[^>]*>(.*?)<\s*/\s*span>", "g")))) {
+    			var element = jQuery(bodyStr);
+    			// if element can be created off the body text
+    			// and it is a span having .translate class
+    			if (element && element.is("span.translate")) {
+    				// add span to DOM and remove text node
+    	        	jQuery(this).parent().append(element);
+    	        	jQuery(this).remove();
+    			}
+    		}
+        })
+	});
 }
 
 /**
@@ -126,6 +150,10 @@ function saveMessage(value, settings) {
 function getMessage(value, settings) {
 	/* as fallback use current element text */
 	var message = value;
+	/* save current this element as last edited */
+	lastEdited = this;
+	/* read message synchronously, using openmrs dwr custom message
+	 * service */
 	DWRCustomMessageService.get(jQuery(this).attr('code'), '', {
 		async : false,
 		callback : function(result) {

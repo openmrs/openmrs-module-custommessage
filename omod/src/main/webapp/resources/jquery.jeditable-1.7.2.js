@@ -249,7 +249,7 @@
 
                 /* Focus to first visible form element. */
                 $(':input:visible:enabled:first', form).focus();
-
+                $(':input:visible:enabled:first', form).caretToEnd();
                 /* Highlight input contents when requested. */
                 if (settings.select) {
                     input.select();
