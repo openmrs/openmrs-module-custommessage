@@ -123,6 +123,7 @@ public class CustomMessageController {
 					msg.setCode(code);
 					msg.setLocale(l);
 					msg.setMessage(message);
+					msg.setMessageLocation(cms.resolveLocationForCode(code));
 					cms.saveCustomMessage(msg);
 					hasChanged = true;
 				}
