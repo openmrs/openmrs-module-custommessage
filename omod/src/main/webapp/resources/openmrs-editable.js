@@ -10,6 +10,8 @@ function handleTranslateMode(translateMode) {
     if (translateMode) {
     	// make all inputs to be in-line editable buttons 
     	makeEditableButtons();
+    	// make all in-line editable links to have special shift-key holding down dependent click handler
+    	rearrangeEditableLinks();
     	// sanitize all spans in order to avoid possible break of existing widgets on page
     	sanitizeSpans();
     	
@@ -19,8 +21,28 @@ function handleTranslateMode(translateMode) {
     		id		: "code",
     		style	: "inherit",
     		data 	: getMessage,
-    		onblur	: handleBlur
+    		onblur	: handleBlur,
+    		onedit  : editHook
     	});
+    	
+        
+        jQuery("body").bind("keydown", function(e) {
+        	// if user presses shift key, temporary disable
+        	// translate mode until he releases it
+            if (e.keyCode == 16) {
+            	translateMode = false;
+                jQuery("#translateButton").val("Translate: OFF");
+            }
+        });
+
+        jQuery("body").bind("keyup", function(e) {
+        	// if user releases shift key, enable
+        	// translate mode again
+            if (e.keyCode == 16) {
+            	translateMode = true;
+                jQuery("#translateButton").val("Translate: ON");
+            }
+        });    	
     }
     // set corresponding text as caption of translate button
     jQuery("#translateButton").val("Translate: " + (translateMode ? "ON" : "OFF"));
@@ -84,6 +106,34 @@ function makeEditableButtons() {
 		button.attr("id", jQuery(this).attr("id"));
 		button.html(jQuery(this).val());
 		jQuery(this).replaceWith(button);
+	});
+}
+
+/**
+ * Makes all in-line editable (having inner "span.translate" elements) <a/>
+ * tags to have special click handler that activates natural link behaviour only
+ * when shift key is being hold down
+ */
+function rearrangeEditableLinks() {
+	jQuery("a").each(function () {
+		// if <a/> element has inner span with class "translate"
+		if (jQuery(this).children("span.translate").length > 0) {
+			// customize it's click handler in order to disable natural
+			// link behavior called on click if shift key is not held down
+			jQuery(this).click(function(event, isSyntetic) {
+				if (!isSyntetic) {
+					event.preventDefault();
+					if (event.shiftKey) {
+						jQuery(this).trigger("click", [true]);
+					}
+				} else {
+					// since it is a syntetic call of this handler
+					// and shift key was pressed, avoid opening new
+					// window and simulate simple link click
+					window.location.href = jQuery(this).attr("href");
+				}
+			});
+		}
 	});
 }
 
@@ -218,8 +268,11 @@ function handleBlur(value, settings) {
 
 /**
  * Resets in-line editable element within passed in container
- * @param container the container that contains in-line input to be reset
- * @param settings the complete setting instance received from Jeditable plugin
+ * 
+ * @param container
+ *            the container that contains in-line input to be reset
+ * @param settings
+ *            the complete setting instance received from Jeditable plugin
  */
 function reset(container, settings) {
 	// cancel in-line form editing
@@ -232,4 +285,20 @@ function reset(container, settings) {
     if (settings.tooltip) {
         jQuery(container).attr('title', settings.tooltip);                
     }
+}
+
+/**
+ * Determines if in-line editing can occur or not. This function will be used to
+ * hook to edit handler on editable element
+ * 
+ * @param container
+ *            the container that contains in-line input to be reset
+ * @param settings
+ *            complete setting instance received from Jeditable plugin
+ * @param event
+ *            the event object that has triggered handler on editable element
+ * @returns true if in-line editing is allowed
+ */
+function editHook(settings, container, event) {
+	return !event.shiftKey;
 }

@@ -131,11 +131,12 @@
                 
                 /* Prevent throwing an exeption if edit field is clicked again. */
                 if (self.editing) {
+                	e.preventDefault();
                     return;
                 }
                 
                 /* Abort if onedit hook returns false. */
-                if (false === onedit.apply(this, [settings, self])) {
+                if (false === onedit.apply(this, [settings, self, e])) {
                    return;
                 }
                 
