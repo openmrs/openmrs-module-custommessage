@@ -209,6 +209,9 @@ function getMessage(value, settings) {
 		callback : function(result) {
 			if (result) {
 				message = result;
+				// use the result returned from the server as revert text
+				// to avoid the problem described in https://tickets.openmrs.org/browse/CSTM-23
+				lastEdited.revert = result;
 			}
 		}
 	});
