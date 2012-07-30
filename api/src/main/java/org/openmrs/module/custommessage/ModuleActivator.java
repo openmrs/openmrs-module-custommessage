@@ -16,6 +16,7 @@ package org.openmrs.module.custommessage;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.Activator;
+import org.openmrs.module.ModuleException;
 import org.openmrs.web.taglib.OpenmrsMessageTag;
 
 /**
@@ -31,8 +32,18 @@ public class ModuleActivator implements Activator {
 	 */
 	@Override
 	public void startup() {
+		
+		// try to define if there is a support for openmrs:message
+		// by instantiating org.openmrs.web.taglib.OpenmrsMessageTag
+		try {
+			Class.forName("org.openmrs.web.taglib.OpenmrsMessageTag");
+		} catch(ClassNotFoundException e) {
+			LOG.error("Unable to start module because openmrs:message tag is not supported by the system");
+			throw new ModuleException("Unable to start module because openmrs:message tag is not supported by this version of system");
+		}
 
-		// customize tag writer behavior for openmrs:message tag
+		// customize tag writer behavior for openmrs:message tag if openmrs
+		// messaging support is provided via used version of OpenMRS framework
 		OpenmrsMessageTag.setTagWriterBehavior(new CustomTagMessageWriterBehavior());
 
 		LOG.info("Started custommessage module");
