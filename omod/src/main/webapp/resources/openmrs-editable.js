@@ -22,7 +22,8 @@ function handleTranslateMode(translateMode) {
     		style	: "inherit",
     		data 	: getMessage,
     		onblur	: handleBlur,
-    		onedit  : editHook
+    		onedit  : editHook,
+    		onreset : resetHook
     	});
     	
         
@@ -211,7 +212,7 @@ function getMessage(value, settings) {
 				message = result;
 				// use the result returned from the server as revert text
 				// to avoid the problem described in https://tickets.openmrs.org/browse/CSTM-23
-				lastEdited.revert = result;
+				lastEdited.revertText = result;
 			}
 		}
 	});
@@ -228,7 +229,7 @@ function getMessage(value, settings) {
 function handleBlur(value, settings) {
 	// if in-line input value has changed 
 	var inLineForm = jQuery("form", this);
-	if (value != this.revert) {
+	if (value != this.revertText) {
 		var input = jQuery("input", inLineForm);
 		var self = this;
 		// create dynamic confirmation dialog about loosing changes
@@ -236,7 +237,7 @@ function handleBlur(value, settings) {
 		var dialogElement = confirmDialog.dialog( {
 		    buttons: {
             	"Yes" : function() { 
-            		reset(self, settings);
+            		resetHook(self, settings);
     		        jQuery(this).dialog("close");
             	}, 
             	"No"  : function() {
@@ -265,7 +266,7 @@ function handleBlur(value, settings) {
 	        collision	: 'fit'
 	    });
 	} else {
-		reset(this, settings);
+		resetHook(this, settings);
 	}
 }
 
@@ -277,7 +278,7 @@ function handleBlur(value, settings) {
  * @param settings
  *            the complete setting instance received from Jeditable plugin
  */
-function reset(container, settings) {
+function resetHook(container, settings) {
 	// cancel in-line form editing
 	jQuery(container).html(container.revert);
 	container.editing   = false;
