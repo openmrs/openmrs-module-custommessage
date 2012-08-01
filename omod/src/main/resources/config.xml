@@ -2,7 +2,7 @@
 <module configVersion="1.0">	
 	<id>custommessage</id>
 	<name>Custom Message</name>
-	<version>1.3</version>
+	<version>1.4</version>
 	<package>org.openmrs.module.@MODULE_ID@</package>
 	<author>Partners In Health</author>
 	<description>Supports user-defined, live translations of OpenMRS</description>
