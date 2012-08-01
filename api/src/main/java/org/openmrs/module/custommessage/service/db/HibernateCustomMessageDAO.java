@@ -22,6 +22,7 @@ import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.module.custommessage.CustomMessage;
+import org.openmrs.module.custommessage.MessagesLocation;
 
 /**
  * Core implementation of the DAO
@@ -108,5 +109,49 @@ public class HibernateCustomMessageDAO implements CustomMessageDAO {
 			customMessage = result.get(0);
 		}
 	    return customMessage;
+    }
+
+	/**
+	 * @see org.openmrs.module.custommessage.service.db.CustomMessageDAO#getMessagesLocation(java.lang.String)
+	 */
+	@Override
+    public MessagesLocation getMessagesLocation(String locationId) {
+		return (MessagesLocation)sessionFactory.getCurrentSession().get(MessagesLocation.class, locationId);
+    }
+
+	/**
+	 * @see org.openmrs.module.custommessage.service.db.CustomMessageDAO#getMessagesLocationByUuid(java.lang.String)
+	 */
+	@Override
+    public MessagesLocation getMessagesLocationByUuid(String uuid) {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(MessagesLocation.class);
+		criteria.add(Restrictions.eq("uuid", uuid));
+		return (MessagesLocation)criteria.uniqueResult();
+    }
+
+	/**
+	 * @see org.openmrs.module.custommessage.service.db.CustomMessageDAO#getAllMessagesLocations()
+	 */
+	@SuppressWarnings("unchecked")
+    @Override
+    public List<MessagesLocation> getAllMessagesLocations() {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(MessagesLocation.class);
+		return criteria.list();
+    }
+
+	/**
+	 * @see org.openmrs.module.custommessage.service.db.CustomMessageDAO#saveMessagesLocation(org.openmrs.module.custommessage.MessagesLocation)
+	 */
+	@Override
+    public void saveMessagesLocation(MessagesLocation messagesLocation) {
+		sessionFactory.getCurrentSession().saveOrUpdate(messagesLocation);
+    }
+
+	/**
+	 * @see org.openmrs.module.custommessage.service.db.CustomMessageDAO#deleteMessagesLocation(org.openmrs.module.custommessage.MessagesLocation)
+	 */
+	@Override
+    public void deleteMessagesLocation(MessagesLocation messagesLocation) {
+		sessionFactory.getCurrentSession().delete(messagesLocation);
     }
 }

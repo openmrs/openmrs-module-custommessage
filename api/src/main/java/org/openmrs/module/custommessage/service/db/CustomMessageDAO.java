@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.openmrs.module.custommessage.CustomMessage;
+import org.openmrs.module.custommessage.MessagesLocation;
 import org.openmrs.module.custommessage.service.CustomMessageService;
 
 /**
@@ -58,5 +59,30 @@ public interface CustomMessageDAO {
 	 * @param customMessage the Custom Message to delete from the database
 	 */
 	public void deleteCustomMessage(CustomMessage customMessage);
+	
+	/**
+	 * {@link CustomMessageService#getMessagesLocation(String)}
+	 */
+	public MessagesLocation getMessagesLocation(String locationId);
+	
+	/**
+	 * {@link CustomMessageService#getMessagesLocationByUuid(String)}
+	 */
+	public MessagesLocation getMessagesLocationByUuid(String uuid);
+	
+	/**
+	 * {@link CustomMessageService#getAllMessagesLocations()}
+	 */
+	public List<MessagesLocation> getAllMessagesLocations();
+	
+	/**
+	 * {@link CustomMessageService#saveMessagesLocation(MessagesLocation)}
+	 */
+	public void saveMessagesLocation(MessagesLocation messagesLocation);
+	
+	/**
+	 * {@link CustomMessageService#deleteMessagesLocation(MessagesLocation)}
+	 */
+	public void deleteMessagesLocation(MessagesLocation messagesLocation);
 }
 

@@ -24,4 +24,8 @@ public class CustomMessageConstants {
 	
 	public final static String PRIVILEGE_MANAGE_CUSTOM_MESSAGES = "Manage Custom Messages";
 	
+	public final static String CUSTOM_MESSAGES_LOCATION_DEFAULT_ID = "core";
+	
+	public final static String CUSTOM_MESSAGES_LOCATION_DEFAULT_NAME = "Core";
+	
 }

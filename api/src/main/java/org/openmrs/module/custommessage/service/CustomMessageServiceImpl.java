@@ -20,10 +20,15 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.apache.commons.lang.StringUtils;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.messagesource.PresentationMessageMap;
+import org.openmrs.module.Module;
+import org.openmrs.module.ModuleFactory;
 import org.openmrs.module.custommessage.CustomMessage;
+import org.openmrs.module.custommessage.CustomMessageConstants;
+import org.openmrs.module.custommessage.MessagesLocation;
 import org.openmrs.module.custommessage.service.db.CustomMessageDAO;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -82,7 +87,6 @@ public class CustomMessageServiceImpl extends BaseOpenmrsService implements Cust
 		dao.deleteCustomMessage(customMessage);
 	}
 	
-	
 	/**
 	 * @return all custom messages as presentation messages by locale
 	 */
@@ -111,29 +115,124 @@ public class CustomMessageServiceImpl extends BaseOpenmrsService implements Cust
 				ret.put(m.getCode(), pmm);
 			}
 			pmm.put(m.getLocale(), m);
-		}		
+		}
 		return ret;
 	}
-
+	
 	/**
 	 * @return the dao
 	 */
 	public CustomMessageDAO getDao() {
 		return dao;
 	}
-
+	
 	/**
 	 * @param dao the dao to set
 	 */
 	public void setDao(CustomMessageDAO dao) {
 		this.dao = dao;
 	}
-
+	
 	/**
-	 * @see org.openmrs.module.custommessage.service.CustomMessageService#getCustomMessagesForCodeAndLocale(java.lang.String, java.util.Locale)
+	 * @see org.openmrs.module.custommessage.service.CustomMessageService#getCustomMessagesForCodeAndLocale(java.lang.String,
+	 *      java.util.Locale)
 	 */
 	@Override
-    public CustomMessage getCustomMessagesForCodeAndLocale(String code, Locale locale) {
-	    return dao.getCustomMessagesForCode(code, locale);
-    }
+	public CustomMessage getCustomMessagesForCodeAndLocale(String code, Locale locale) {
+		return dao.getCustomMessagesForCode(code, locale);
+	}
+	
+	/**
+	 * @see org.openmrs.module.custommessage.service.CustomMessageService#getMessagesLocation(java.lang.String)
+	 */
+	@Override
+	public MessagesLocation getMessagesLocation(String locationId) {
+		return dao.getMessagesLocation(locationId);
+	}
+	
+	/**
+	 * @see org.openmrs.module.custommessage.service.CustomMessageService#getMessagesLocationByUuid(java.lang.String)
+	 */
+	@Override
+	public MessagesLocation getMessagesLocationByUuid(String uuid) {
+		return dao.getMessagesLocationByUuid(uuid);
+	}
+	
+	/**
+	 * @see org.openmrs.module.custommessage.service.CustomMessageService#getAllMessagesLocations()
+	 */
+	@Override
+	public List<MessagesLocation> getAllMessagesLocations() {
+		return dao.getAllMessagesLocations();
+	}
+	
+	/**
+	 * @see org.openmrs.module.custommessage.service.CustomMessageService#saveMessagesLocation(org.openmrs.module.custommessage.MessagesLocation)
+	 */
+	@Override
+	public void saveMessagesLocation(MessagesLocation messagesLocation) {
+		dao.saveMessagesLocation(messagesLocation);
+	}
+	
+	/**
+	 * @see org.openmrs.module.custommessage.service.CustomMessageService#deleteMessagesLocation(org.openmrs.module.custommessage.MessagesLocation)
+	 */
+	@Override
+	public void deleteMessagesLocation(MessagesLocation messagesLocation) {
+		dao.deleteMessagesLocation(messagesLocation);
+	}
+	
+	/**
+	 * @see org.openmrs.module.custommessage.service.CustomMessageService#resolveLocationForCode(java.lang.String)
+	 */
+	@Override
+	public MessagesLocation resolveLocationForCode(String messageCode) {
+		CustomMessageService customMessageService = Context.getService(CustomMessageService.class);
+		MessagesLocation messageLocation = null;
+		// if message code is not specified raise an error
+		if (StringUtils.isBlank(messageCode)) {
+			throw new IllegalArgumentException();
+		}
+		// iterate over the set of successfully started modules
+		for (Module module : ModuleFactory.getStartedModules()) {
+			if (messageCode.startsWith(module.getModuleId().concat("."))) {
+				messageLocation = customMessageService.getMessagesLocation(module.getModuleId());
+				if (messageLocation == null) {
+					// if location does not exist yet, create in and save into database
+					messageLocation = new MessagesLocation(module.getModuleId(), module.getName());
+					customMessageService.saveMessagesLocation(messageLocation);
+				}
+				return messageLocation;
+			}
+		}
+		// return default location meaning that it's core message as no matching module id is found
+		messageLocation = customMessageService.getMessagesLocation(CustomMessageConstants.CUSTOM_MESSAGES_LOCATION_DEFAULT_ID);
+		if (messageLocation == null) {
+			// if core location does not exist yet, create in and save into database
+			messageLocation = new MessagesLocation(CustomMessageConstants.CUSTOM_MESSAGES_LOCATION_DEFAULT_ID,
+			        CustomMessageConstants.CUSTOM_MESSAGES_LOCATION_DEFAULT_NAME);
+			customMessageService.saveMessagesLocation(messageLocation);
+		}
+		return messageLocation;
+	}
+
+	/**
+	 * @see org.openmrs.module.custommessage.service.CustomMessageService#getAvailableMessagesLocationsMap()
+	 */
+	@Override
+	public Map<String, String> getAvailableMessagesLocationsMap() {
+		// add map of locations to model to be used on export page
+		Map<String, String> locationMap = new TreeMap<String, String>();
+		List<MessagesLocation> messagesLocations = getAllMessagesLocations();
+		if (messagesLocations != null) {
+			for (MessagesLocation messagesLocation : messagesLocations) {
+				locationMap.put(messagesLocation.getLocationId(), messagesLocation.getName());
+			}
+		}
+		// merge messages locations with list of started modules which can be considered as potential messages locations
+		for (Module startedModule : ModuleFactory.getStartedModules()) {
+			locationMap.put(startedModule.getModuleId(), startedModule.getName());
+		}
+		return locationMap;
+	}
 }

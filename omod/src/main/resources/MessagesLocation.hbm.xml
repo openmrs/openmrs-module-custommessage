@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="org.openmrs.module.custommessage" >
+	<class name="MessagesLocation" table="custommessage_locations">	
+		
+		<cache usage="read-write"/>
+
+		<id name="locationId" type="java.lang.String" column="location_id" length="128">
+			<generator class="assigned" />
+		</id>
+
+		<discriminator column="location_id" insert="false" />	
+
+		<property name="uuid" type="string" not-null="true" length="38" />
+		<property name="name" type="string" not-null="true" length="255"/>
+		
+		<set name="customMessages" lazy="true" cascade="all-delete-orphan,evict" inverse="true" access="field">
+			<key column="location_id" not-null="true" />
+			<one-to-many class="CustomMessage" />
+		</set>
+	</class>
+</hibernate-mapping>

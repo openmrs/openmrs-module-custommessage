@@ -1,22 +1,25 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <dataset>
-  <custommessage_messages id="1" uuid="a2e25607-d0c4-4e44-8be6-31e1ac7e100d" code="test.code" locale="en" message="Message 1" updated_by="1" updated_datetime="2012-06-09 22:10:57" />
-  <custommessage_messages id="2" uuid="b2e25607-d0c4-4e44-8be6-31e1ac7e100d" code="test.code" locale="fr" message="Message fr 1" updated_by="1" updated_datetime="2012-06-09 22:10:57" />
-  <custommessage_messages id="3" uuid="c2e25607-d0c4-4e44-8be6-31e1ac7e100d" code="test.code" locale="it" message="Message it 1" updated_by="1" updated_datetime="2012-06-09 22:10:57" />
-  <custommessage_messages id="4" uuid="d2e25607-d0c4-4e44-8be6-31e1ac7e100d" code="test.code" locale="pt" message="Message pt 1" updated_by="1" updated_datetime="2012-06-09 22:10:57" />
-  <custommessage_messages id="5" uuid="e2e25607-d0c4-4e44-8be6-31e1ac7e100d" code="test.code" locale="es" message="Message es 1" updated_by="1" updated_datetime="2012-06-09 22:10:57" />
-  <custommessage_messages id="6" uuid="f2e25607-d0c4-4e44-8be6-31e1ac7e100d" code="test.code" locale="pl " message="Message pl 1" updated_by="1" updated_datetime="2012-06-09 22:10:57" />
-  <custommessage_messages id="7" uuid="a3e25607-d0c4-4e44-8be6-31e1ac7e100d" code="test.another.code" locale="en" message="Message 2" updated_by="1" updated_datetime="2012-06-09 22:10:57" />
-  <custommessage_messages id="8" uuid="a4e25607-d0c4-4e44-8be6-31e1ac7e100d" code="test.another.code" locale="fr" message="Message fr 2" updated_by="1" updated_datetime="2012-06-09 22:10:57" />
-  <custommessage_messages id="9" uuid="a5e25607-d0c4-4e44-8be6-31e1ac7e100d" code="test.another.code" locale="it" message="Message it 2" updated_by="1" updated_datetime="2012-06-09 22:10:57" />
-  <custommessage_messages id="10" uuid="a6e25607-d0c4-4e44-8be6-31e1ac7e100d" code="test.another.code" locale="pt" message="Message pt 2" updated_by="1" updated_datetime="2012-06-09 22:10:57" />
-  <custommessage_messages id="11" uuid="a7e25607-d0c4-4e44-8be6-31e1ac7e100d" code="test.another.code" locale="es" message="Message es 2" updated_by="1" updated_datetime="2012-06-09 22:10:57" />
-  <custommessage_messages id="12" uuid="a8e25607-d0c4-4e44-8be6-31e1ac7e100d" code="test.another.code" locale="pl" message="Message pl 2" updated_by="1" updated_datetime="2012-06-09 22:10:57" />
-  <custommessage_messages id="13" uuid="a9e25607-d0c4-4e44-8be6-31e1ac7e100d" code="just.test.code" locale="en" message="Message 3" updated_by="1" updated_datetime="2012-06-09 22:10:57" />
-  <custommessage_messages id="14" uuid="a2d25607-d0c4-4e44-8be6-31e1ac7e100d" code="just.test.code" locale="fr" message="Message fr 3" updated_by="1" updated_datetime="2012-06-09 22:10:57" />
-  <custommessage_messages id="15" uuid="a2f25607-d0c4-4e44-8be6-31e1ac7e100d" code="just.test.code" locale="it" message="Message it 3" updated_by="1" updated_datetime="2012-06-09 22:10:57" />
-  <custommessage_messages id="16" uuid="a2e35607-d0c4-4e44-8be6-31e1ac7e100d" code="just.test.code" locale="pt" message="Message pt 3" updated_by="1" updated_datetime="2012-06-09 22:10:57" />
-  <custommessage_messages id="17" uuid="a2e45607-d0c4-4e44-8be6-31e1ac7e100d" code="just.test.code" locale="es" message="Message es 3" updated_by="1" updated_datetime="2012-06-09 22:10:57" />
-  <custommessage_messages id="18" uuid="a2e55607-d0c4-4e44-8be6-31e1ac7e100d" code="just.test.code" locale="pl" message="Message pl 3" updated_by="1" updated_datetime="2012-06-09 22:10:57" />
-  <custommessage_messages id="19" uuid="a2e65607-d0c4-4e44-8be6-31e1ac7e100d" code="test.some.code" locale="en" message="Message 4" updated_by="1" updated_datetime="2012-06-09 22:10:57" />
+  <custommessage_messages id="1" uuid="a2e25607-d0c4-4e44-8be6-31e1ac7e100d" code="test.code" locale="en" message="Message 1" updated_by="1" updated_datetime="2012-06-09 22:10:57" location_id="core" />
+  <custommessage_messages id="2" uuid="b2e25607-d0c4-4e44-8be6-31e1ac7e100d" code="test.code" locale="fr" message="Message fr 1" updated_by="1" updated_datetime="2012-06-09 22:10:57" location_id="core" />
+  <custommessage_messages id="3" uuid="c2e25607-d0c4-4e44-8be6-31e1ac7e100d" code="test.code" locale="it" message="Message it 1" updated_by="1" updated_datetime="2012-06-09 22:10:57" location_id="core" />
+  <custommessage_messages id="4" uuid="d2e25607-d0c4-4e44-8be6-31e1ac7e100d" code="test.code" locale="pt" message="Message pt 1" updated_by="1" updated_datetime="2012-06-09 22:10:57" location_id="core" />
+  <custommessage_messages id="5" uuid="e2e25607-d0c4-4e44-8be6-31e1ac7e100d" code="test.code" locale="es" message="Message es 1" updated_by="1" updated_datetime="2012-06-09 22:10:57" location_id="core" />
+  <custommessage_messages id="6" uuid="f2e25607-d0c4-4e44-8be6-31e1ac7e100d" code="test.code" locale="pl " message="Message pl 1" updated_by="1" updated_datetime="2012-06-09 22:10:57" location_id="core" />
+  <custommessage_messages id="7" uuid="a3e25607-d0c4-4e44-8be6-31e1ac7e100d" code="test.another.code" locale="en" message="Message 2" updated_by="1" updated_datetime="2012-06-09 22:10:57" location_id="core" />
+  <custommessage_messages id="8" uuid="a4e25607-d0c4-4e44-8be6-31e1ac7e100d" code="test.another.code" locale="fr" message="Message fr 2" updated_by="1" updated_datetime="2012-06-09 22:10:57" location_id="core" />
+  <custommessage_messages id="9" uuid="a5e25607-d0c4-4e44-8be6-31e1ac7e100d" code="test.another.code" locale="it" message="Message it 2" updated_by="1" updated_datetime="2012-06-09 22:10:57" location_id="core" />
+  <custommessage_messages id="10" uuid="a6e25607-d0c4-4e44-8be6-31e1ac7e100d" code="test.another.code" locale="pt" message="Message pt 2" updated_by="1" updated_datetime="2012-06-09 22:10:57" location_id="core" />
+  <custommessage_messages id="11" uuid="a7e25607-d0c4-4e44-8be6-31e1ac7e100d" code="test.another.code" locale="es" message="Message es 2" updated_by="1" updated_datetime="2012-06-09 22:10:57" location_id="core" />
+  <custommessage_messages id="12" uuid="a8e25607-d0c4-4e44-8be6-31e1ac7e100d" code="test.another.code" locale="pl" message="Message pl 2" updated_by="1" updated_datetime="2012-06-09 22:10:57" location_id="core" />
+  <custommessage_messages id="13" uuid="a9e25607-d0c4-4e44-8be6-31e1ac7e100d" code="just.test.code" locale="en" message="Message 3" updated_by="1" updated_datetime="2012-06-09 22:10:57" location_id="core" />
+  <custommessage_messages id="14" uuid="a2d25607-d0c4-4e44-8be6-31e1ac7e100d" code="just.test.code" locale="fr" message="Message fr 3" updated_by="1" updated_datetime="2012-06-09 22:10:57" location_id="core" />
+  <custommessage_messages id="15" uuid="a2f25607-d0c4-4e44-8be6-31e1ac7e100d" code="just.test.code" locale="it" message="Message it 3" updated_by="1" updated_datetime="2012-06-09 22:10:57" location_id="core" />
+  <custommessage_messages id="16" uuid="a2e35607-d0c4-4e44-8be6-31e1ac7e100d" code="just.test.code" locale="pt" message="Message pt 3" updated_by="1" updated_datetime="2012-06-09 22:10:57" location_id="core" />
+  <custommessage_messages id="17" uuid="a2e45607-d0c4-4e44-8be6-31e1ac7e100d" code="just.test.code" locale="es" message="Message es 3" updated_by="1" updated_datetime="2012-06-09 22:10:57" location_id="core" />
+  <custommessage_messages id="18" uuid="a2e55607-d0c4-4e44-8be6-31e1ac7e100d" code="just.test.code" locale="pl" message="Message pl 3" updated_by="1" updated_datetime="2012-06-09 22:10:57" location_id="core" />
+  <custommessage_messages id="19" uuid="a2e65607-d0c4-4e44-8be6-31e1ac7e100d" code="test.some.code" locale="en" message="Message 4" updated_by="1" updated_datetime="2012-06-09 22:10:57" location_id="core" />
+  
+  <custommessage_locations location_id="core" name="Core" uuid="a2e65607-d0c4-4e44-8be6-31e1ac7e199d" />
+  <custommessage_locations location_id="test" name="Test Location" uuid="b2e65607-d0c4-4e44-8be6-31e1ac7e199d" />
 </dataset>

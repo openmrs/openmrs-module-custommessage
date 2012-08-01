@@ -20,8 +20,8 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.custommessage.CustomMessage;
 import org.openmrs.module.custommessage.CustomMessageConstants;
 import org.openmrs.module.custommessage.CustomMessageSource;
-import org.openmrs.module.custommessage.CustomMessageUtil;
 import org.openmrs.module.custommessage.service.CustomMessageService;
+import org.openmrs.module.custommessage.util.CustomMessageUtil;
 import org.openmrs.util.LocaleUtility;
 
 /**
@@ -43,9 +43,10 @@ public class DWRCustomMessageService {
 	 * <em>language</em> parameters
 	 * 
 	 * @param code the key to save message by
-	 * @param message the text of message to be saved using given key
-	 * @param locale <b>(optional)</b> the locale to save message in (if it is not set, then
-	 *            current system locale will be used)
+	 * @param message the text of message to be saved using given key (if blank string is passed in
+	 *            the custom message will be removed)
+	 * @param locale <b>(optional)</b> the locale to save message in (if it is not set, then current
+	 *            system locale will be used)
 	 */
 	public String save(String code, String message, String locale) {
 		
@@ -78,23 +79,37 @@ public class DWRCustomMessageService {
 			customMessage.setCode(code);
 			customMessage.setLocale(messageLocale);
 			customMessage.setMessage(message);
+			customMessage.setMessageLocation(customMessageService.resolveLocationForCode(code));
 		}
 		
-		customMessageService.saveCustomMessage(customMessage);
+		// if passed in text is not blank, save message
+		boolean hasChanged = Boolean.TRUE;
+		if (StringUtils.isNotBlank(message)) {
+			customMessageService.saveCustomMessage(customMessage);
+		} else if (customMessage.getId() != null) {
+			// otherwise, if message exists for given locale and code, remove it
+			customMessageService.deleteCustomMessage(customMessage);
+		} else {
+			hasChanged = Boolean.FALSE;
+		}
 		
-		// have to do it as long as we need refresh of custom messages cache after each save operation
-		((CustomMessageSource)Context.getMessageSourceService().getActiveMessageSource()).refreshCache();
+		// if customization changed, refresh the cache used by message source
+		if (hasChanged) {
+			// have to do it as long as we need refresh of custom messages cache after each save operation
+			((CustomMessageSource) Context.getMessageSourceService().getActiveMessageSource()).refreshCache();
+		}
 		
-		return message;
+		// return the text of the message that has been saved,
+		// if message has been removed, return corresponding non-customized text from message source
+		return StringUtils.isNotBlank(message) ? message : get(code, locale);
 	}
 	
 	/**
-	 * Gets the text of message specified by passed in <em>key</em> and
-	 * <em>language</em> parameters
+	 * Gets the text of message specified by passed in <em>key</em> and <em>language</em> parameters
 	 * 
 	 * @param code the key to read message by
-	 * @param locale <b>(optional)</b> the locale to save message in (if it is not set, then
-	 *            current system locale will be used)
+	 * @param locale <b>(optional)</b> the locale to save message in (if it is not set, then current
+	 *            system locale will be used)
 	 * @return the text of message found using given key
 	 */
 	public String get(String code, String locale) {
@@ -118,4 +133,5 @@ public class DWRCustomMessageService {
 		// resolve message using active message source without passing in an argument array
 		return Context.getMessageSourceService().getActiveMessageSource().getMessage(code, null, messageLocale);
 	}
+	
 }

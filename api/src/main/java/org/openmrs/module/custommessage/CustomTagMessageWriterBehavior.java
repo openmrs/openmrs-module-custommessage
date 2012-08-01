@@ -14,7 +14,7 @@
 package org.openmrs.module.custommessage;
 
 import org.openmrs.module.custommessage.CustomMessageConstants;
-import org.openmrs.module.custommessage.CustomMessageUtil;
+import org.openmrs.module.custommessage.util.CustomMessageUtil;
 import org.openmrs.web.taglib.behavior.TagMessageWriterBehavior;
 
 /**
