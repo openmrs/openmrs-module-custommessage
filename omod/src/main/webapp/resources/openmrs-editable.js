@@ -6,8 +6,13 @@ var lastEdited;
  * Handles given translate mode value
  */
 function handleTranslateMode(translateMode) {
+	
+	// move translate button from the page header to footer
+	moveTranslateButton();
+	
 	// if translate mode is enabled
     if (translateMode) {
+
     	// make all inputs to be in-line editable buttons 
     	makeEditableButtons();
     	// make all in-line editable links to have special shift-key holding down dependent click handler
@@ -305,4 +310,12 @@ function resetHook(container, settings) {
  */
 function editHook(settings, container, event) {
 	return !event.shiftKey;
+}
+
+/**
+ * Finds translate button within DOM, clones it and moves to footer strip, where
+ * language bar should be
+ */
+function moveTranslateButton() {
+	jQuery("#translateButton").prependTo("#localeOptions");
 }

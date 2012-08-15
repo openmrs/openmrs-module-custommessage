@@ -27,7 +27,7 @@
 	</extension>
 	
 	<extension>
-		<point>org.openmrs.footerFullBeforeStatusBar</point>
+		<point>org.openmrs.headerFullIncludeExt</point>
 		<class>@MODULE_PACKAGE@.extension.ToggleTranslateModeExtension</class>
 	</extension>
 	

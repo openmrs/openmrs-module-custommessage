@@ -36,11 +36,7 @@ public class CustomTagMessageWriterBehavior implements TagMessageWriterBehavior 
 	 */
 	@Override
 	public String renderMessage(String resolvedText, String code, String locale, String fallbackText) {
-		if (CustomMessageUtil.isTranslateModeEnabled()) {
-			return String.format("<span class=translate code=%s>%s</span>", code, resolvedText);
-		} else {
-			return resolvedText;
-		}
+		return CustomMessageUtil.makeMessageTranslatable(code, resolvedText);
 	}
 	
 }

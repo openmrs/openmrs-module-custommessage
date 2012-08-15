@@ -34,6 +34,8 @@ import org.openmrs.messagesource.MutableMessageSource;
 import org.openmrs.messagesource.PresentationMessage;
 import org.openmrs.messagesource.PresentationMessageMap;
 import org.openmrs.module.custommessage.service.CustomMessageService;
+import org.openmrs.module.custommessage.util.CustomMessageUtil;
+import org.openmrs.util.OpenmrsUtil;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -48,6 +50,8 @@ public class CustomMessageSource extends AbstractMessageSource implements Mutabl
 	protected static final Log log = LogFactory.getLog(CustomMessageSource.class);
 	private Map<Locale, PresentationMessageMap> cache = null;
 	private boolean showMessageCode = false;
+	public static boolean isOpenmrsMessageTagAvailable = false;
+	public static ThreadLocal<Boolean> ignoreOpenmrsMessageAbsence = new ThreadLocal<Boolean>();
 	
 	public static final String GLOBAL_PROPERTY_SHOW_MESSAGE_CODES = "custommessage.showMessageCodes";
 	
@@ -251,7 +255,11 @@ public class CustomMessageSource extends AbstractMessageSource implements Mutabl
 		if (s == null || s.equals(code)) {
 			return null;
 		}
-		return s;
+		if (isOpenmrsMessageTagAvailable || OpenmrsUtil.nullSafeEquals(ignoreOpenmrsMessageAbsence.get(), Boolean.TRUE)) {
+			return s;
+		} else {
+			return CustomMessageUtil.makeMessageTranslatable(code, s);
+		}
 	}
 
 	/**

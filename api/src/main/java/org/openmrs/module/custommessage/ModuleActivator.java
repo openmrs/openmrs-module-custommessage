@@ -13,10 +13,12 @@
  */
 package org.openmrs.module.custommessage;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.Activator;
-import org.openmrs.module.ModuleException;
 import org.openmrs.web.taglib.OpenmrsMessageTag;
 
 /**
@@ -36,17 +38,35 @@ public class ModuleActivator implements Activator {
 		// try to define if there is a support for openmrs:message
 		// by instantiating org.openmrs.web.taglib.OpenmrsMessageTag
 		try {
-			Class.forName("org.openmrs.web.taglib.OpenmrsMessageTag");
-		} catch(ClassNotFoundException e) {
-			LOG.error("Unable to start module because openmrs:message tag is not supported by the system");
-			throw new ModuleException("Unable to start module because openmrs:message tag is not supported by this version of system");
-		}
+			Class<?> tagClass = Class.forName("org.openmrs.web.taglib.OpenmrsMessageTag");
 
-		// customize tag writer behavior for openmrs:message tag if openmrs
-		// messaging support is provided via used version of OpenMRS framework
-		OpenmrsMessageTag.setTagWriterBehavior(new CustomTagMessageWriterBehavior());
+			// still no errors ? good, then support for openmrs:message is, go ahead Mrs. JVM
+			Class<?> writerBehaviourClass = Class.forName("org.openmrs.web.taglib.behavior.TagMessageWriterBehavior");
+			Method method = tagClass.getMethod("setTagWriterBehavior", writerBehaviourClass);
+			
+			Class<?> writerBehaviourmplClass = Class.forName("org.openmrs.module.custommessage.CustomTagMessageWriterBehavior");
+			method.invoke(null, writerBehaviourmplClass.newInstance());
 
-		LOG.info("Started custommessage module");
+			LOG.info("Started custommessage module");
+			
+			// indicate that openmrs:message tag is supported so, it's not needed to enable
+			// limited functionality support for spring:message tag 
+			CustomMessageSource.isOpenmrsMessageTagAvailable = Boolean.TRUE;
+			
+			return;
+
+		} catch (ClassNotFoundException e) {
+		} catch (NoClassDefFoundError e) {
+		} catch (SecurityException e) {
+        } catch (NoSuchMethodException e) {
+        } catch (IllegalArgumentException e) {
+        } catch (IllegalAccessException e) {
+        } catch (InvocationTargetException e) {
+        } catch (InstantiationException e) {
+        }
+		
+		LOG.warn("Module started with limited features, because openmrs:message tag is not supported by the system");
+
 	}
 
 	/**
@@ -56,8 +76,22 @@ public class ModuleActivator implements Activator {
 	public void shutdown() {
 
 		// reset openmrs:message tag writer behavior when module is stopped
-		OpenmrsMessageTag.setTagWriterBehavior(OpenmrsMessageTag.DEFAULT_WRITER_BEHAVIOUR);
-
-		LOG.info("Shut down custommessage module");
+		try {
+			Class<?> clazz = Class.forName("org.openmrs.web.taglib.OpenmrsMessageTag");
+	
+			// still no errors ? good, then support for openmrs:message is, go ahead Mrs. JVM
+			Method method = clazz.getMethod("setTagWriterBehavior", String.class);
+			method.invoke(null, clazz.getDeclaredField("DEFAULT_WRITER_BEHAVIOUR").get(null));
+			
+			LOG.info("Shut down custommessage module");
+		} catch (NoClassDefFoundError e) {
+		} catch (ClassNotFoundException e) {
+        } catch (SecurityException e) {
+	    } catch (NoSuchMethodException e) {
+	    } catch (IllegalArgumentException e) { 
+	    } catch (IllegalAccessException e) {
+	    } catch (InvocationTargetException e) {
+	    } catch (NoSuchFieldException e) {
+	    }
 	}	
 }

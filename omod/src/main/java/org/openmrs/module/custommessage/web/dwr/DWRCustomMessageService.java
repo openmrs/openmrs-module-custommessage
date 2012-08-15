@@ -130,8 +130,12 @@ public class DWRCustomMessageService {
 			messageLocale = Context.getLocale();
 		}
 		
-		// resolve message using active message source without passing in an argument array
-		return Context.getMessageSourceService().getActiveMessageSource().getMessage(code, null, messageLocale);
+		// resolve message using active message source without passing in an arguments array,
+		// but enable ignoring of openmrs:message tag absence before call is proceeded
+		CustomMessageSource.ignoreOpenmrsMessageAbsence.set(Boolean.TRUE);
+		String message = Context.getMessageSourceService().getActiveMessageSource().getMessage(code, null, messageLocale);
+		CustomMessageSource.ignoreOpenmrsMessageAbsence.set(Boolean.FALSE);
+		return message;
 	}
 	
 }

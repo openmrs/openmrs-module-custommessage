@@ -13,12 +13,9 @@
  */
 package org.openmrs.module.custommessage.util;
 
-import org.apache.commons.lang.StringUtils;
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.ModuleFactory;
 import org.openmrs.module.custommessage.CustomMessageConstants;
-import org.openmrs.module.custommessage.service.CustomMessageService;
 
 /**
  * This class contains convenient methods for working with custom messages entities, related global
@@ -82,6 +79,22 @@ public class CustomMessageUtil {
 			    String.valueOf(!isTranslateModeEnabled()));
 		} else {
 			throw new IllegalStateException("Can not toggle translate mode for not authorized user");
+		}
+	}
+	
+	/**
+	 * Convenient method that check if translate mode is enabled, then it alters passed in message
+	 * by enclosing it with span &lt;span class="translate"&gt; and &lt;/span&gt; tags, otherwise, it returns 
+	 * 
+	 * @param code the code of translatable message supplied by this method
+	 * @param message the text message to be handled
+	 * @return passed in <em>message</em> represented as "translatable" if translate mode is enabled, or original message otherwise
+	 */
+	public static String makeMessageTranslatable(String code, String message) {
+		if (CustomMessageUtil.isTranslateModeEnabled()) {
+			return String.format("<span class=translate code=%s>%s</span>", code, message);
+		} else {
+			return message;
 		}
 	}
 }
