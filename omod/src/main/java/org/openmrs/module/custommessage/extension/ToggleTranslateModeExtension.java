@@ -97,6 +97,12 @@ public class ToggleTranslateModeExtension extends HeaderIncludeExt {
 			velocityContext.put("translateModeStatus", currentUser.getUserProperty(
 			    CustomMessageConstants.USER_PROPERTY_TRANSLATE_MODE_ENABLED, "false"));
 			
+			// add messages to localize confirmation dialog (https://tickets.openmrs.org/browse/CSTM-22)
+			velocityContext.put("confirmTitle", Context.getMessageSourceService().getMessage("custommessage.confirmInLineCancelDialog.title"));
+			velocityContext.put("confirmText", Context.getMessageSourceService().getMessage("custommessage.confirmInLineCancelDialog.text"));
+			velocityContext.put("confirmYes", Context.getMessageSourceService().getMessage("general.yes"));
+			velocityContext.put("confirmNo", Context.getMessageSourceService().getMessage("general.no"));
+
 			String overridenContent = null;
 			try {
 				StringWriter writer = new StringWriter();

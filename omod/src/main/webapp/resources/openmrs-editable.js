@@ -238,18 +238,21 @@ function handleBlur(value, settings) {
 		var input = jQuery("input", inLineForm);
 		var self = this;
 		// create dynamic confirmation dialog about loosing changes
-		var confirmDialog = jQuery("<div id=confirmDialog title='Confirm loosing changes'>Are you sure you want to cancel in-line editing ?</div>");
+		var confirmDialog = jQuery("<div id=confirmDialog title=" + confirmationMessageTitle + ">" + confirmationMessageText + "</div>");
+		
+		// create buttons with localized captions
+		var buttonOpts = {};
+		buttonOpts[confirmationYes] = function() { 
+    		resetHook(self, settings);
+	        jQuery(this).dialog("close");
+    	}
+		buttonOpts[confirmationNo] = function() {
+    		jQuery(this).dialog("close");
+    		input.focus();
+    	}
+		
 		var dialogElement = confirmDialog.dialog( {
-		    buttons: {
-            	"Yes" : function() { 
-            		resetHook(self, settings);
-    		        jQuery(this).dialog("close");
-            	}, 
-            	"No"  : function() {
-            		jQuery(this).dialog("close");
-            		input.focus();
-            	}
-		    },
+		    buttons: buttonOpts,
 		    close: function(e) { 
 		    	// escape should "undo" the dialog
 		    	if (e.which == 27) {

@@ -16,4 +16,10 @@
     handleTranslateMode(translateMode);
   });
 </script>
+<script>
+  var confirmationMessageTitle = '${confirmTitle}'
+  var confirmationMessageText = '${confirmText}'
+  var confirmationYes = '${confirmYes}'
+  var confirmationNo = '${confirmNo}'
+</script>
 <input type="button" id="translateButton"/>
