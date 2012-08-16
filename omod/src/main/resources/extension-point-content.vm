@@ -1,0 +1,19 @@
+<script src="/${contextPath}/dwr/interface/DWRCustomMessageService.js"></script>
+<script type="text/javascript"> 
+  var jQueryIsExisting = typeof(jQuery) != "undefined";
+</script> 
+<script src="/${contextPath}/moduleResources/custommessage/jquery-1.7.2.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+  jQuery.noConflict(jQueryIsExisting);
+</script> 
+<script src="/${contextPath}/moduleResources/custommessage/jquery.caret.js" type="text/javascript"></script>
+<script src="/${contextPath}/moduleResources/custommessage/jquery.jeditable-1.7.2.js" type="text/javascript"></script>
+<script src="/${contextPath}/moduleResources/custommessage/openmrs-editable.js" type="text/javascript"></script>
+<script type="text/javascript">
+  jQuery(window).load(function() {
+    // handle translate mode properly  
+    var translateMode = ${translateModeStatus};    
+    handleTranslateMode(translateMode);
+  });
+</script>
+<input type="button" id="translateButton"/>
