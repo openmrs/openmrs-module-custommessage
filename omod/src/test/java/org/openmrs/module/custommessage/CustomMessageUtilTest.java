@@ -131,4 +131,25 @@ public class CustomMessageUtilTest extends BaseModuleContextSensitiveTest {
 		Context.logout();
 	}
 	
+	/**
+	 * @see CustomMessageUtil#makeMessageTranslatable(String, String)
+	 */
+	@Test
+	@Verifies(value = "should escape HTML within message", method = "makeMessageTranslatable(String, String)")
+	public void makeMessageTranslatable_shouldEscapeHtmlWithinMessage() {
+		if (Context.isAuthenticated()) {
+			Context.logout();
+		}
+		
+		Context.authenticate("test_translator", "test");
+		
+		// make sure that translate mode is enabled, so message will be escaped
+		assertTrue(CustomMessageUtil.isTranslateModeEnabled());
+		// get translatable message and assert that HTML text is escaped in proper way
+		String translatableMessage = CustomMessageUtil.makeMessageTranslatable("test.code", "</span>");
+		assertEquals("<span class=translate code=test.code>&lt;/span&gt;</span>", translatableMessage);
+		
+		Context.logout();
+	}
+	
 }

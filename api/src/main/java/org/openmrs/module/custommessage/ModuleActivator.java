@@ -19,7 +19,6 @@ import java.lang.reflect.Method;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.Activator;
-import org.openmrs.web.taglib.OpenmrsMessageTag;
 
 /**
  * This class contains the logic that is run every time this module
@@ -65,7 +64,7 @@ public class ModuleActivator implements Activator {
         } catch (InstantiationException e) {
         }
 		
-		LOG.warn("Module started with limited features, because openmrs:message tag is not supported by the system");
+		LOG.warn("Module custommessage started with limited features, because openmrs:message tag is not supported by the system");
 
 	}
 
