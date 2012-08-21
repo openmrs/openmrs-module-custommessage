@@ -32,32 +32,38 @@ function handleTranslateMode(translateMode) {
     	});
     	
         
-        jQuery("body").bind("keydown", function(e) {
+        jQuery(document).bind("keydown", function(e) {
         	// if user presses shift key, temporary disable
         	// translate mode until he releases it
-            if (e.keyCode == 16) {
+            if (e.keyCode == 17) {
             	translateMode = false;
-                jQuery("#translateButton").val("Translate: OFF");
+                jQuery("#translateButton").val("Translate: ON");
+                jQuery(".translate").each(function(){ 
+                	jQuery(this).addClass("customizable"); 
+                });
             }
         });
 
-        jQuery("body").bind("keyup", function(e) {
+        jQuery(document).bind("keyup", function(e) {
         	// if user releases shift key, enable
         	// translate mode again
-            if (e.keyCode == 16) {
+            if (e.keyCode == 17) {
             	translateMode = true;
-                jQuery("#translateButton").val("Translate: ON");
+            	jQuery(".translate").each(function(){ 
+                	jQuery(this).removeClass("customizable"); 
+                });
+                jQuery("#translateButton").val("Translate: ON (press CTRL to activate)");
             }
         });    	
     }
     // set corresponding text as caption of translate button
-    jQuery("#translateButton").val("Translate: " + (translateMode ? "ON" : "OFF"));
+    jQuery("#translateButton").val("Translate: " + (translateMode ? "ON (press CTRL to activate)" : "OFF"));
     // toggle translate mode on/off
     jQuery("#translateButton").click(function(e) {
         translateMode = !translateMode;
         // call dwr service to proceed with toggling
         DWRCustomMessageService.toggleTranslateMode({async: false});
-        jQuery(this).val("Translate: " + (translateMode ? "ON" : "OFF"));
+        jQuery(this).val("Translate: " + (translateMode ? "ON (press CTRL to activate)" : "OFF"));
         location.reload();
 	});
     
@@ -88,8 +94,8 @@ function makeEditableButtons() {
 		
 		// customize click listener on button element in order to fix https://tickets.openmrs.org/browse/CSTM-13
 		button.click(function(event) {
-			// allow button click only when shift key is being held down
-	        if (!event.shiftKey) {
+			// allow button click only when shift key is not being held down
+	        if (editHook(null, null, event)) {
 	            event.preventDefault();
     	         // mozilla assumes that click event is received from button rather
     	         // than from inner span element, so, trigger that event on span manually 
@@ -129,7 +135,8 @@ function rearrangeEditableLinks() {
 			jQuery(this).click(function(event, isSyntetic) {
 				if (!isSyntetic) {
 					event.preventDefault();
-					if (event.shiftKey) {
+					if (!editHook(null, null, event)
+					  && !jQuery(this).children("span.translate")[0].editing) {
 						jQuery(this).trigger("click", [true]);
 					}
 				} else {
@@ -312,7 +319,7 @@ function resetHook(container, settings) {
  * @returns true if in-line editing is allowed
  */
 function editHook(settings, container, event) {
-	return !event.shiftKey;
+	return event.ctrlKey;
 }
 
 /**
