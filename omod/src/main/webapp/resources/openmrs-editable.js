@@ -172,6 +172,29 @@ function sanitizeSpans() {
     		}
         })
 	});
+	revertSpannedPlaceholders();
+}
+
+/**
+ * Resets content of each placeholder, having HTML span element string value, by
+ * text enclosed between <span></span/> tags of that HTML string
+ */
+function revertSpannedPlaceholders() {
+	// select all HTML elements with an placeholder attribute (textarea, input, and other elements)
+	jQuery("[placeholder]").each(function() {
+		var placeholderStr = jQuery(this).attr("placeholder");
+		// if element has a placeholder, and this is a span, handle it
+		if (placeholderStr && (placeholderStr == placeholderStr.match(new RegExp("<\s*span[^>]*>(.*?)<\s*/\s*span>", "g")))) {
+			var spannedPlaceholder = jQuery(placeholderStr);
+			// if element can be created off the body text
+			// and it is a span having .translate class
+			if (spannedPlaceholder && spannedPlaceholder.is("span.translate")) {
+				// add span to DOM and remove text node
+				jQuery(this).attr("placeholder", spannedPlaceholder.text());
+	        	spannedPlaceholder.remove();
+			}
+		}
+	});
 }
 
 /**

@@ -13,7 +13,6 @@
  */
 package org.openmrs.module.custommessage.util;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.custommessage.CustomMessageConstants;
@@ -91,11 +90,10 @@ public class CustomMessageUtil {
 	 * @param message the text message to be handled
 	 * @return passed in <em>message</em> represented as "translatable" if translate mode is enabled, or original message otherwise
 	 * 
-	 * @should escape HTML within message
 	 */
 	public static String makeMessageTranslatable(String code, String message) {
 		if (CustomMessageUtil.isTranslateModeEnabled()) {
-			return String.format("<span class=translate code=%s>%s</span>", code, StringEscapeUtils.escapeHtml(message));
+			return String.format("<span class=translate code=%s>%s</span>", code, message);
 		} else {
 			return message;
 		}
