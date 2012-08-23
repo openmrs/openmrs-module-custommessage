@@ -35,7 +35,7 @@ function handleTranslateMode(translateMode) {
         jQuery(document).bind("keydown", function(e) {
         	// if user presses shift key, temporary disable
         	// translate mode until he releases it
-            if (e.keyCode == 17) {
+            if (editHook(null, null, e)) {
             	translateMode = false;
                 jQuery("#translateButton").val("Translate: ON");
                 jQuery(".translate").each(function(){ 
@@ -47,23 +47,23 @@ function handleTranslateMode(translateMode) {
         jQuery(document).bind("keyup", function(e) {
         	// if user releases shift key, enable
         	// translate mode again
-            if (e.keyCode == 17) {
+            if (editHook(null, null, e)) {
             	translateMode = true;
             	jQuery(".translate").each(function(){ 
                 	jQuery(this).removeClass("customizable"); 
                 });
-                jQuery("#translateButton").val("Translate: ON (press CTRL to activate)");
+                jQuery("#translateButton").val("Translate: ON (press " + translateKey() + " to activate)");
             }
         });    	
     }
     // set corresponding text as caption of translate button
-    jQuery("#translateButton").val("Translate: " + (translateMode ? "ON (press CTRL to activate)" : "OFF"));
+    jQuery("#translateButton").val("Translate: " + (translateMode ? "ON (press " + translateKey() + " to activate)" : "OFF"));
     // toggle translate mode on/off
     jQuery("#translateButton").click(function(e) {
         translateMode = !translateMode;
         // call dwr service to proceed with toggling
         DWRCustomMessageService.toggleTranslateMode({async: false});
-        jQuery(this).val("Translate: " + (translateMode ? "ON (press CTRL to activate)" : "OFF"));
+        jQuery(this).val("Translate: " + (translateMode ? "ON (press " + translateKey() + " to activate)" : "OFF"));
         location.reload();
 	});
     
@@ -318,8 +318,31 @@ function resetHook(container, settings) {
  *            the event object that has triggered handler on editable element
  * @returns true if in-line editing is allowed
  */
-function editHook(settings, container, event) {
-	return event.ctrlKey;
+function editHook(settings, container, e) {
+    var os = (function() {
+      var ua = navigator.userAgent.toLowerCase();
+      return {
+          isWindows: /win/.test(ua),
+          isLinux: /linux/.test(ua),
+          isMac: /mac/.test(ua)
+      };
+    }());
+    if (os.isMac) {
+        // JQuery provides e.metaKey to detect Command key, but different
+        // browsers use different keycodes for the Command key(s)
+        if (jQuery.browser.mozilla)
+            // Firefox defines both Command keys as keycode 224
+            return e.which == 224 || e.metaKey;
+        else if (jQuery.browser.opera)
+            // Opera defines both Command keys as keycode 17
+            return e.which == 17 || e.metaKey;
+        else
+            // Other browsers (Chrome/Safari/IE) define left Command as 91, right as 93
+            return e.which == 91 || e.which == 93 || e.metaKey;
+    } else {
+        // Check for Ctrl key via keycode or e.ctrlKey
+        return e.which == 17 || e.ctrlKey;
+    }
 }
 
 /**
@@ -328,4 +351,13 @@ function editHook(settings, container, event) {
  */
 function moveTranslateButton() {
 	jQuery("#translateButton").prependTo("#localeOptions");
+}
+
+/**
+ * Gets the name of key to be used to activate in-line editing/highlighting depending on user agent
+ * @returns the name of key to use for activating in-line translate
+ */
+function translateKey () {
+	var ua = navigator.userAgent.toLowerCase();
+	return /mac os/.test(ua) ? "CMD" : "CTRL";
 }
