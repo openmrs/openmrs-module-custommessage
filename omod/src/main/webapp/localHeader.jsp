@@ -1,7 +1,7 @@
 <%@ include file="/WEB-INF/template/include.jsp" %>
 <openmrs:extensionPoint pointId="org.openmrs.admin.list" type="html">
 	<openmrs:hasPrivilege privilege="${extension.requiredPrivilege}">
-		<c:if test="${extension.class.name == 'org.openmrs.module.custommessage.extension.AdministrationPageExtension'}">
+		<c:if test="${extension.getClass().name == 'org.openmrs.module.custommessage.extension.AdministrationPageExtension'}">
 			<ul id="menu">
 				<c:forEach items="${extension.links}" var="link" varStatus="status">
 					<c:set var="linkSelected" value="${fn:contains(pageContext.request.requestURI, fn:substringBefore(link.key, '.'))}"/>
