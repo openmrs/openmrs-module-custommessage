@@ -43,6 +43,7 @@ public class CustomMessageServiceImpl extends BaseOpenmrsService implements Cust
 	/**
 	 * @return the CustomMessage with the given id
 	 */
+	@Transactional(readOnly = true)
 	public CustomMessage getCustomMessage(Integer id) {
 		return dao.getCustomMessage(id);
 	}
@@ -50,6 +51,7 @@ public class CustomMessageServiceImpl extends BaseOpenmrsService implements Cust
 	/**
 	 * @return the CustomMessage with the given uuid
 	 */
+	@Transactional(readOnly = true)
 	public CustomMessage getCustomMessageByUuid(String uuid) {
 		return dao.getCustomMessageByUuid(uuid);
 	}
@@ -57,6 +59,7 @@ public class CustomMessageServiceImpl extends BaseOpenmrsService implements Cust
 	/**
 	 * @return all custom messages defined
 	 */
+	@Transactional(readOnly = true)
 	public List<CustomMessage> getAllCustomMessages() {
 		return dao.getAllCustomMessages();
 	}
@@ -64,6 +67,7 @@ public class CustomMessageServiceImpl extends BaseOpenmrsService implements Cust
 	/**
 	 * @return all custom messages for the associated code
 	 */
+	@Transactional(readOnly = true)
 	public List<CustomMessage> getCustomMessagesForCode(String code) {
 		return dao.getCustomMessagesForCode(code);
 	}
@@ -90,6 +94,7 @@ public class CustomMessageServiceImpl extends BaseOpenmrsService implements Cust
 	/**
 	 * @return all custom messages as presentation messages by locale
 	 */
+	@Transactional(readOnly = true)
 	public Map<Locale, PresentationMessageMap> getPresentationMessagesByLocale() {
 		Map<Locale, PresentationMessageMap> ret = new HashMap<Locale, PresentationMessageMap>();
 		for (CustomMessage m : dao.getAllCustomMessages()) {
@@ -106,6 +111,7 @@ public class CustomMessageServiceImpl extends BaseOpenmrsService implements Cust
 	/**
 	 * @return all custom messages by code
 	 */
+	@Transactional(readOnly = true)
 	public Map<String, Map<Locale, CustomMessage>> getCustomMessagesByCode() {
 		Map<String, Map<Locale, CustomMessage>> ret = new TreeMap<String, Map<Locale, CustomMessage>>();
 		for (CustomMessage m : dao.getAllCustomMessages()) {
@@ -138,6 +144,7 @@ public class CustomMessageServiceImpl extends BaseOpenmrsService implements Cust
 	 *      java.util.Locale)
 	 */
 	@Override
+	@Transactional(readOnly = true)
 	public CustomMessage getCustomMessagesForCodeAndLocale(String code, Locale locale) {
 		return dao.getCustomMessagesForCode(code, locale);
 	}
@@ -146,6 +153,7 @@ public class CustomMessageServiceImpl extends BaseOpenmrsService implements Cust
 	 * @see org.openmrs.module.custommessage.service.CustomMessageService#getMessagesLocation(java.lang.String)
 	 */
 	@Override
+	@Transactional(readOnly = true)
 	public MessagesLocation getMessagesLocation(String locationId) {
 		return dao.getMessagesLocation(locationId);
 	}
@@ -154,6 +162,7 @@ public class CustomMessageServiceImpl extends BaseOpenmrsService implements Cust
 	 * @see org.openmrs.module.custommessage.service.CustomMessageService#getMessagesLocationByUuid(java.lang.String)
 	 */
 	@Override
+	@Transactional(readOnly = true)
 	public MessagesLocation getMessagesLocationByUuid(String uuid) {
 		return dao.getMessagesLocationByUuid(uuid);
 	}
@@ -162,6 +171,7 @@ public class CustomMessageServiceImpl extends BaseOpenmrsService implements Cust
 	 * @see org.openmrs.module.custommessage.service.CustomMessageService#getAllMessagesLocations()
 	 */
 	@Override
+	@Transactional(readOnly = true)
 	public List<MessagesLocation> getAllMessagesLocations() {
 		return dao.getAllMessagesLocations();
 	}
@@ -186,6 +196,7 @@ public class CustomMessageServiceImpl extends BaseOpenmrsService implements Cust
 	 * @see org.openmrs.module.custommessage.service.CustomMessageService#resolveLocationForCode(java.lang.String)
 	 */
 	@Override
+	@Transactional(readOnly = true)
 	public MessagesLocation resolveLocationForCode(String messageCode) {
 		CustomMessageService customMessageService = Context.getService(CustomMessageService.class);
 		MessagesLocation messageLocation = null;
@@ -220,6 +231,7 @@ public class CustomMessageServiceImpl extends BaseOpenmrsService implements Cust
 	 * @see org.openmrs.module.custommessage.service.CustomMessageService#getAvailableMessagesLocationsMap()
 	 */
 	@Override
+	@Transactional(readOnly = true)
 	public Map<String, String> getAvailableMessagesLocationsMap() {
 		// add map of locations to model to be used on export page
 		Map<String, String> locationMap = new TreeMap<String, String>();
