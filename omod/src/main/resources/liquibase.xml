@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
- 
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
-                  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
  
 	<changeSet id="custommessage-2012-05-23-15:50" author="mvorobey">
 		<preConditions onFail="MARK_RAN">
@@ -75,7 +75,7 @@
     
     <changeSet id="custommessage-2012-07-12-19:21" author="mvorobey">
     	<preConditions onFail="MARK_RAN">
-    		<not><foreignKeyConstraintExists foreignKeyName="custommessage_messages_location_id"/></not>
+    		<not><foreignKeyConstraintExists foreignKeyTableName="custommessage_messages" foreignKeyName="custommessage_messages_location_id"/></not>
     	</preConditions>
     	<comment>
 			Add foreign key constraint for custommessage_messages table in order to connect it with custommessage_locations using many-to-one relationship
